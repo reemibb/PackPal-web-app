@@ -1,11 +1,15 @@
+<div class="alert alert-warning alert-dismissible fade show mb-0 text-center" role="alert">
+  {{ content.alert }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
  <div class="hero d-flex align-items-center">
     <div class="hero-overlay"></div>
     <div class="container hero-content text-center">
       <div class="row">
         <div class="col">
           <img *ngIf="images.pack" [src]="images.pack" alt="Pack Icon" class="img-fluid mb-4 rounded shadow" style="max-width: 600px; height: 310px;">
-            <h1 class="display-4 fw-bold">Pack Smarter, Travel Lighter</h1>
-            <p class="lead">Create personalized packing lists tailored to your destination, weather, and activities.</p>
+          <h1 class="display-4 fw-bold">{{ content.title }}</h1>
+          <p class="lead">{{ content.subtitle }}</p>
             <a routerLink="/home/generate" class="btn btn-dark-green btn-lg mt-3">Get Started</a>
         </div>
       </div>
@@ -58,8 +62,8 @@
   <div class="container py-5">
     <div class="row text-center mb-4">
       <div class="col">
-        <h2 class="section-title">Why PackPal?</h2>
-        <p class="text-muted">Your all-in-one travel checklist generator</p>
+        <h2 class="section-title">{{ content.whyHeader }}</h2>
+        <p class="text-muted">{{ content.whySub }}</p>
       </div>
     </div>
 
@@ -68,8 +72,8 @@
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body text-center">
             <div class="feature-icon mb-3">🧳</div>
-            <h5 class="card-title">Customized Lists</h5>
-            <p class="card-text">Receive a packing list that adapts to your trip’s purpose and length.</p>
+            <h5 class="card-title">{{ content.whyHeader1 }}</h5>
+            <p class="card-text">{{ content.whySub1 }}</p>
           </div>
         </div>
       </div>
@@ -78,8 +82,8 @@
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body text-center">
             <div class="feature-icon mb-3">🌦️</div>
-            <h5 class="card-title">Weather Aware</h5>
-            <p class="card-text">Automatically include weather-appropriate gear using live or mock forecasts.</p>
+            <h5 class="card-title">{{ content.whyHeader2 }}</h5>
+            <p class="card-text">{{ content.whySub2 }}</p>
           </div>
         </div>
       </div>
@@ -88,8 +92,8 @@
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body text-center">
             <div class="feature-icon mb-3">📝</div>
-            <h5 class="card-title">Printable & Savable</h5>
-            <p class="card-text">Download or print your checklist in one click for offline use.</p>
+            <h5 class="card-title">{{ content.whyHeader3 }}</h5>
+            <p class="card-text">{{ content.whySub3 }}</p>
           </div>
         </div>
       </div>
@@ -99,32 +103,32 @@
   <div class="container py-5">
     <div class="row text-center mb-4">
       <div class="col">
-        <h2 class="section-title">How It Works</h2>
+        <h2 class="section-title">{{ content.howHeader }}</h2>
       </div>
     </div>
     <div class="row text-center">
       <div class="col-md-3">
         <div class="p-3">
           <div class="feature-icon mb-2">📍</div>
-          <h6>1. Enter Destination</h6>
+          <h6>{{ content.howSub1 }}</h6>
         </div>
       </div>
       <div class="col-md-3">
         <div class="p-3">
           <div class="feature-icon mb-2">📆</div>
-          <h6>2. Set Travel Dates</h6>
+          <h6>{{ content.howSub2 }}</h6>
         </div>
       </div>
       <div class="col-md-3">
         <div class="p-3">
           <div class="feature-icon mb-2">🏞️</div>
-          <h6>3. Choose Activities</h6>
+          <h6>{{ content.howSub3 }}</h6>
         </div>
       </div>
       <div class="col-md-3">
         <div class="p-3">
           <div class="feature-icon mb-2">✅</div>
-          <h6>4. Get Your List!</h6>
+          <h6>{{ content.howSub4 }}</h6>
         </div>
       </div>
     </div>
@@ -132,8 +136,8 @@
   <div class="container py-5 bg-light rounded">
     <div class="row justify-content-center">
       <div class="col-lg-6 text-center">
-        <h3 class="mb-3">Get Travel Packing Tips</h3>
-        <p class="text-muted mb-4">Subscribe to our newsletter for monthly packing hacks and travel inspiration</p>
+        <h3 class="mb-3">{{ content.tipHeader }}</h3>
+        <p class="text-muted mb-4">{{ content.subscribe }}</p>
         <form class="row g-2">
           <div class="col-8">
             <input type="email" class="form-control" placeholder="Your email address" required>

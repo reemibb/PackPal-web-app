@@ -29,5 +29,9 @@ export class ConnectService {
   return this.http.get<any>(this.baseUrl + 'get_body_images.php');
 }
 
+getBodyContent() {
+  return this.http.get<any>(this.baseUrl + '/get_body_content.php');
+}
+
 
 }

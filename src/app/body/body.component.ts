@@ -10,13 +10,15 @@ import { ConnectService } from '../connect.service';
 })
 export class BodyComponent implements OnInit {
   images: any = {};
+  content: any = {};
+
 
   constructor(
     private connectService: ConnectService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     // ✅ Only run AOS on the client side
     /*if (isPlatformBrowser(this.platformId)) {
       const AOS = require('aos');
@@ -27,6 +29,10 @@ export class BodyComponent implements OnInit {
     this.connectService.getBodyImages().subscribe({
       next: res => this.images = res,
       error: () => console.error('Failed to load images')
+    });
+     this.connectService.getBodyContent().subscribe({
+      next: res => this.content = res,
+      error: () => console.error('Failed to load body content')
     });
   }
 }
