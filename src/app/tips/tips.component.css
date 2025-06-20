@@ -1,0 +1,61 @@
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f9f9f9, #d6e6f2);
+      padding-top: 75px;
+    }
+
+    .tips-section {
+      padding: 60px 0;
+    }
+
+    .tip-card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .tip-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .footer {
+      background: #f0f0f0;
+      padding: 1.5rem 0;
+      text-align: center;
+    }
+
+    .btn-dark-green {
+      background-color: #14532d;
+      border-color: #14532d;
+      color: white;
+    }
+
+    .btn-dark-green:hover {
+      background-color: #0f3f23;
+      border-color: #0f3f23;
+    }
+    
+    .modal-tip-img {
+      height: 200px;
+      object-fit: cover;
+      width: 100%;
+      border-radius: 8px;
+    }
+    
+    .tip-card .card-body {
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .tip-card .card-text {
+      flex-grow: 1;
+    }
+    
+    .click-more {
+      color: #14532d;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }

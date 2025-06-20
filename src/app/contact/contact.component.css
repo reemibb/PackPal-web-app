@@ -1,0 +1,42 @@
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f9f9f9, #d6e6f2);
+      padding-top: 75px;
+    }
+
+    .contact-section {
+      padding: 60px 0;
+    }
+
+    .form-control, .form-select {
+      border-radius: 10px;
+    }
+
+    .btn-dark-green {
+      background-color: #14532d;
+      border-color: #14532d;
+      color: white;
+    }
+
+    .btn-dark-green:hover {
+      background-color: #0f3f23;
+      border-color: #0f3f23;
+    }
+
+    .contact-info h5 {
+      color: #14532d;
+    }
+
+    .footer {
+      background: #f0f0f0;
+      padding: 1.5rem 0;
+      text-align: center;
+    }
+
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+      border-radius: 10px;
+    }

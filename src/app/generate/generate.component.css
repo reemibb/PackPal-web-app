@@ -1,0 +1,51 @@
+
+    body {
+      background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #14532d;
+    }
+
+    .btn-fun {
+      background: linear-gradient(45deg, #00c853, #64dd17);
+      border: none;
+      color: white;
+      font-weight: bold;
+    }
+
+    .btn-fun:hover {
+      background: linear-gradient(45deg, #00bfa5, #1de9b6);
+    }
+
+    .packing-list li {
+      font-size: 1.1rem;
+      transition: transform 0.3s ease;
+    }
+
+    .packing-list li:hover {
+      transform: scale(1.05);
+      background-color: #f1f8e9;
+    }
+
+    .card-glow {
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 10px #00c853;
+      }
+      to {
+        box-shadow: 0 0 20px #64dd17;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .table-responsive {
+        overflow-x: auto;
+      }
+    }
