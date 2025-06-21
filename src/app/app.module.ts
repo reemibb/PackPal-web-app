@@ -14,6 +14,7 @@ import { BodyComponent } from './body/body.component';
 import { GenerateComponent } from './generate/generate.component';
 import { TipsComponent } from './tips/tips.component';
 import { ContactComponent } from './contact/contact.component';
+import { RatingComponent } from './rating/rating.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ContactComponent } from './contact/contact.component';
     BodyComponent,
     GenerateComponent,
     TipsComponent,
-    ContactComponent
+    ContactComponent,
+    RatingComponent
   ],
   imports: [
     BrowserModule,

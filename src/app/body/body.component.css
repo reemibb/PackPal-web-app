@@ -93,4 +93,29 @@
           right: -3rem;
         }
       }
-      
+      .custom-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1055;
+  padding: 1rem 1.5rem;
+  background-color: #d1e7dd;
+  border: 1px solid #badbcc;
+  color: #0f5132;
+  border-radius: 0.5rem;
+  min-width: 320px;
+  max-width: 500px;
+  animation: slideDownFade 0.4s ease-out;
+}
+
+@keyframes slideDownFade {
+  0% {
+    transform: translateX(-50%) translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}

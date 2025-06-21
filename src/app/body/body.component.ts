@@ -11,6 +11,9 @@ import { ConnectService } from '../connect.service';
 export class BodyComponent implements OnInit {
   images: any = {};
   content: any = {};
+  email: string = '';
+  userId: number = 0; 
+  showAlert = false;
 
 
   constructor(
@@ -34,5 +37,23 @@ export class BodyComponent implements OnInit {
       next: res => this.content = res,
       error: () => console.error('Failed to load body content')
     });
+    this.userId = Number(localStorage.getItem('user_id'));
   }
+subscribe() {
+  if (!this.email || !this.userId) return;
+
+  this.connectService.subscribeUser(this.userId, this.email).subscribe(
+    (res: any) => {
+      if (res.success) {
+        this.showAlert = true;
+        setTimeout(() => this.showAlert = false, 5000); // Auto-dismiss after 5s
+        this.email = ''; // Clear field
+      } else {
+        alert(res.message || "Subscription failed.");
+      }
+    },
+    () => alert("Server error during subscription.")
+  );
+}
+
 }

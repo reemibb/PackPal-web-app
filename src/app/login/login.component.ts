@@ -21,6 +21,7 @@ export class LoginComponent {
     this.connectService.login(data).subscribe(response => {
       if (response.success) {
         this.message = 'Login successful! Redirecting...';
+        localStorage.setItem('user_id', response.user.id);
         this.router.navigate(['/home']);  // Redirect here
       } else {
         this.message = response.message || 'Login failed.';

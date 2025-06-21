@@ -33,7 +33,7 @@ export class RegisterComponent {
       next: (response) => {
         if (response.success) {
           this.message = 'Registration successful! Redirecting...';
-          setTimeout(() => this.router.navigate(['/login']), 2000); // Delay redirect
+          setTimeout(() => this.router.navigate(['/home']), 2000); // Delay redirect
         } else {
           this.message = response.message || 'Registration failed.';
         }

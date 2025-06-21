@@ -30,8 +30,31 @@ export class ConnectService {
 }
 
 getBodyContent() {
-  return this.http.get<any>(this.baseUrl + '/get_body_content.php');
+  return this.http.get<any>(this.baseUrl + 'get_body_content.php');
 }
+
+getMainContent() {
+  return this.http.get<any>(this.baseUrl + 'get_main_content.php');
+}
+
+subscribeUser(userId: number, email: string) {
+  return this.http.post(this.baseUrl + 'subscribe.php', {
+    user_id: userId,
+    email: email
+  });
+}
+
+getGenerateContent() {
+  return this.http.get<any>(this.baseUrl + 'get_generate_content.php');
+}
+
+getCountries() {
+  return this.http.get<any>(this.baseUrl + 'get_countries.php');
+}
+
+
+
+
 
 
 }
