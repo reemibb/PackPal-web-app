@@ -1,7 +1,9 @@
 // generate.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit  } from '@angular/core';
 import { ConnectService } from '../connect.service';
 import { HttpClient } from '@angular/common/http';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-generate',
@@ -9,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./generate.component.css'],
   standalone: false,
 })
-export class GenerateComponent implements OnInit {
+export class GenerateComponent implements OnInit, AfterViewInit {
   content = {
     title: '',
     types: [] as string[],
@@ -29,7 +31,17 @@ export class GenerateComponent implements OnInit {
   includeWeather: boolean = false;
   weatherInfo: any = null;
 
+  modalInstance: any;
+  newItem: string = '';
+
+  checklistItems: string[] = [];
+  packedMap: { [item: string]: boolean } = {};
+  lastPackingListId: number = 0;
+
+
+
   constructor(private connectService: ConnectService, private http: HttpClient) {}
+  
 
   ngOnInit() {
     this.connectService.getGenerateContent().subscribe(res => {
@@ -38,6 +50,13 @@ export class GenerateComponent implements OnInit {
       }
     });
     this.loadCountries();
+    this.fetchUserPackingList();
+  }
+  ngAfterViewInit() {
+    const modalElement = document.getElementById('generationModal');
+    if (modalElement) {
+      this.modalInstance = new bootstrap.Modal(modalElement);
+    }
   }
   loadCountries() {
   this.http.get<any>('http://localhost/final-asp-php/get_countries.php').subscribe(res => {
@@ -50,6 +69,14 @@ export class GenerateComponent implements OnInit {
     console.error('HTTP error when fetching countries', error);
   });
 }
+addCustomItem() {
+  const trimmedItem = this.newItem.trim();
+  if (trimmedItem && !this.packingList.includes(trimmedItem)) {
+    this.packingList.push(trimmedItem);
+    this.newItem = ''; // clear the input
+  }
+}
+
 
 generatePackingList() {
   this.packingList = [];
@@ -82,7 +109,11 @@ generatePackingList() {
     if (temp < 15) this.packingList.push('🧥 Warm Jacket');
     else if (temp > 28) this.packingList.push('🕶️ Sunglasses');
   }
+  if (this.modalInstance) this.modalInstance.show();
 }
+closeModal() {
+    if (this.modalInstance) this.modalInstance.hide();
+  }
 removeItem(item: string) {
   this.packingList = this.packingList.filter(i => i !== item);
 }
@@ -108,6 +139,7 @@ removeItem(item: string) {
   }
 
   saveAndExport() {
+    this.packingList = this.packingList.filter(item => !!item && item.trim() !== '');
   const user_id = localStorage.getItem('user_id');
   if (!user_id) {
     alert('User not logged in');
@@ -226,6 +258,105 @@ exportAsPDF() {
     document.body.removeChild(tempDiv);
   });
 }
+
+
+
+fetchUserPackingList() {
+  const user_id = localStorage.getItem('user_id');
+  if (!user_id) return;
+
+  const url = `http://localhost/final-asp-php/get_packing_list.php?user_id=${user_id}`;
+
+  this.http.get<any>(url).subscribe({
+    next: (res) => {
+      if (res.success && Array.isArray(res.items)) {
+        this.checklistItems = res.items;
+        this.lastPackingListId = res.packing_list_id;
+
+        res.items.forEach((item: string) => {
+          this.packedMap[item] = res.packed_status?.[item] ?? false;
+        });
+      } else {
+        console.warn('⚠️ No packing list data');
+      }
+    },
+    error: (err) => {
+      console.error('❌ Failed to fetch packing list:', err);
+    }
+  });
+}
+
+saveChecklistProgress() {
+  const user_id = localStorage.getItem('user_id');
+  console.log('💾 Saving checklist progress...');
+  console.log('🆔 User ID:', user_id);
+  console.log('🆔 Packing List ID:', this.lastPackingListId);
+  console.log('📋 Checklist items:', this.checklistItems);
+  
+  if (!user_id || !this.checklistItems.length) {
+    alert('No user or checklist items found');
+    return;
+  }
+
+  if (!this.lastPackingListId || this.lastPackingListId <= 0) {
+    alert('No packing list ID found. Please generate a packing list first.');
+    return;
+  }
+
+  const payload = this.checklistItems.map(item => ({
+    user_id: Number(user_id),
+    item_name: item,
+    is_checked: this.packedMap[item] || false,
+    packing_list_id: this.lastPackingListId
+  }));
+
+  console.log('📤 Sending payload:', payload);
+
+  this.http.post('http://localhost/final-asp-php/save_checklist.php', payload).subscribe({
+    next: (response: any) => {
+      console.log('✅ Save response:', response);
+      if (response.success) {
+        alert('✅ Progress saved successfully!');
+      } else {
+        alert('❌ Failed to save: ' + (response.message || 'Unknown error'));
+      }
+    },
+    error: (err) => {
+      console.error('❌ Error saving checklist progress:', err);
+      alert('❌ Failed to save progress: ' + (err.message || 'Network error'));
+    }
+  });
+}
+onChecklistChange(item: string, checked: boolean) {
+  this.packedMap[item] = checked;
+
+  const user_id = localStorage.getItem('user_id');
+  if (!user_id || !this.lastPackingListId) {
+    console.warn('Missing user_id or packing_list_id');
+    return;
+  }
+
+  const payload = [{
+    user_id: Number(user_id),
+    item_name: item,
+    is_checked: checked,
+    packing_list_id: this.lastPackingListId
+  }];
+
+  this.http.post('http://localhost/final-asp-php/save_checklist.php', payload).subscribe({
+    next: (response: any) => {
+      if (response.success) {
+        console.log(`✅ Item "${item}" updated successfully.`);
+      } else {
+        console.warn(`❌ Failed to update "${item}": ${response.message}`);
+      }
+    },
+    error: err => {
+      console.error(`❌ Network error saving "${item}":`, err);
+    }
+  });
+}
+
 
 
 }

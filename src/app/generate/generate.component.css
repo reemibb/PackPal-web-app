@@ -49,3 +49,9 @@
         overflow-x: auto;
       }
     }
+    @media (max-width: 576px) {
+      td:first-child {
+        font-weight: 500;
+        white-space: nowrap;
+      }
+    }

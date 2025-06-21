@@ -79,7 +79,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="generationModalLabel">Your Packing List is Ready!</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <div class="alert alert-info">
@@ -100,13 +100,14 @@
               <div class="mt-3">
                 <label for="addItem" class="form-label">Add custom item:</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="addItem" placeholder="e.g. Travel adapter">
-                  <button class="btn btn-dark-green">Add</button>
+                  <input type="text" class="form-control" id="addItem" [(ngModel)]="newItem" name="newItem" placeholder="e.g. Travel adapter">
+                  <button class="btn btn-dark-green" (click)="addCustomItem()" [disabled]="!newItem.trim()">Add</button>
                 </div>
               </div>
+
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
               <button type="button" class="btn btn-fun" (click)="saveAndExport()">Save & Export</button>
             </div>
           </div>
@@ -117,51 +118,38 @@
   <div class="col-12">
     <h3 class="mb-3">Packing Checklist</h3>
     <div class="table-responsive">
-      <table class="table table-hover table-bordered">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col">Category</th>
-            <th scope="col">Item</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Packed</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Clothing</td>
-            <td>T-Shirts</td>
-            <td>5</td>
-            <td><input class="form-check-input" type="checkbox"></td>
-          </tr>
-          <tr>
-            <td>Clothing</td>
-            <td>Pants</td>
-            <td>2</td>
-            <td><input class="form-check-input" type="checkbox"></td>
-          </tr>
-          <tr>
-            <td>Toiletries</td>
-            <td>Toothbrush</td>
-            <td>1</td>
-            <td><input class="form-check-input" type="checkbox"></td>
-          </tr>
-          <tr>
-            <td>Electronics</td>
-            <td>Phone Charger</td>
-            <td>1</td>
-            <td><input class="form-check-input" type="checkbox"></td>
-          </tr>
-          <tr>
-            <td>Documents</td>
-            <td>Passport</td>
-            <td>1</td>
-            <td><input class="form-check-input" type="checkbox"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="table table-sm table-bordered table-hover align-middle mb-0">
+      <thead class="table-dark text-center">
+        <tr>
+          <th scope="col">Item</th>
+          <th scope="col">Packed</th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        <tr *ngFor="let item of checklistItems">
+        <td>{{ item }}</td>
+        <td class="text-center">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [(ngModel)]="packedMap[item]"
+            [ngModelOptions]="{standalone: true}"
+            name="check_{{ item }}"
+            (change)="onChecklistChange(item, packedMap[item])">
+
+
+
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+    <div *ngIf="checklistItems.length === 0" class="text-danger">No items loaded.</div>
+
+</div>
+
     <div class="d-flex justify-content-between mt-3">
-      <button class="btn btn-outline-dark-green">Save Checklist</button>
+      <button class="btn btn-outline-dark-green" (click)="saveChecklistProgress()">Save Checklist</button>
       <button class="btn btn-outline-dark-green">Print Checklist</button>
     </div>
   </div>
