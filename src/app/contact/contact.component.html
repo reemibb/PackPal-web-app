@@ -1,53 +1,64 @@
 <section class="contact-section">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="fw-bold">Get in Touch</h2>
-      <p class="text-muted">We’d love to hear your feedback or help with any questions.</p>
+      <h2 class="fw-bold">{{content.title}}</h2>
+      <p class="text-muted">{{content.subtitle}}</p>
     </div>
 
     <div class="row g-5">
       <div class="col-lg-5">
         <div class="contact-info">
           <h5>📍 Address</h5>
-          <p>Werdaniyeh, Lebanon</p>
+          <p>{{content.address}}</p>
 
           <h5>📞 Phone</h5>
-          <p>+960 70 637 902</p>
+          <p>{{content.phone}}</p>
 
           <h5>✉️ Email</h5>
-          <p>support&#64;packpal.com</p>
+          <p>{{content.email}}</p>
 
           <h5>🕒 Hours</h5>
-          <p>Mon - Fri: 9:00 AM – 6:00 PM</p>
+          <p>{{content.hours}}</p>
         </div>
       </div>
 
       <div class="col-lg-7">
-        <form>
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;" *ngIf="toastMessage">
+          <div class="toast align-items-center text-white bg-success border-0 show fade" role="alert">
+            <div class="d-flex">
+              <div class="toast-body">
+                {{ toastMessage }}
+              </div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="toastMessage = null"></button>
+            </div>
+          </div>
+        </div>
+
+        <form (ngSubmit)="submitMessage()" #contactForm="ngForm">
           <div class="row g-3">
             <div class="col-md-6">
               <label for="name" class="form-label">Your Name</label>
-              <input type="text" id="name" class="form-control" placeholder="Full Name" required>
+              <input type="text" id="name" class="form-control" placeholder="Full Name" required [(ngModel)]="formData.name" name="name">
             </div>
             <div class="col-md-6">
               <label for="email" class="form-label">Your Email</label>
-              <input type="email" id="email" class="form-control" placeholder="mail@example.com" aria-describedby="emailHelp">
-              <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+              <input type="email" id="email" class="form-control" placeholder="mail@example.com" required [(ngModel)]="formData.email" name="email">
             </div>
             <div class="col-12">
               <label for="subject" class="form-label">Subject</label>
-              <input type="text" id="subject" class="form-control" placeholder="I have a question about..." required>
+              <input type="text" id="subject" class="form-control" required [(ngModel)]="formData.subject" name="subject">
             </div>
             <div class="col-12">
               <label for="message" class="form-label">Message</label>
-              <textarea id="message" class="form-control" rows="5" placeholder="Write your message here..." required></textarea>
+              <textarea id="message" class="form-control" rows="5" required [(ngModel)]="formData.message" name="message"></textarea>
             </div>
             <div class="col-12 text-end">
               <button type="submit" class="btn btn-dark-green px-4">Send Message</button>
             </div>
           </div>
         </form>
+
       </div>
-    </div> <!-- ✅ This was missing -->
+    </div> 
   </div>
 </section>

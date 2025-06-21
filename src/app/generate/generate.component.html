@@ -1,4 +1,4 @@
-<div class="container py-5 mt-5 pt-4">
+<div class="container py-5 mt-5 pt-4" style="background: rgba(123, 168, 121, 0.6);">
   <h1 class="text-center section-title mb-4">{{ content.title }}</h1>
 
 
@@ -113,7 +113,17 @@
           </div>
         </div>
       </div>
-    
+
+      <div *ngIf="alertMessage" class="alert alert-dismissible fade show mt-4" [ngClass]="{
+        'alert-success': alertType === 'success',
+        'alert-danger': alertType === 'danger',
+        'alert-warning': alertType === 'warning'
+      }" role="alert">
+        {{ alertMessage }}
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeAlert()"></button>
+      </div>
+
+
 <div class="row mt-5">
   <div class="col-12">
     <h3 class="mb-3">Packing Checklist</h3>

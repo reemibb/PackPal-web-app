@@ -26,6 +26,26 @@
                 <li class="nav-item">
                   <a class="nav-link" routerLink="/home/contact" routerLinkActive="active">Contact</a>
                 </li>
+                <li class="nav-item dropdown profile-nav ms-3">
+                  <a class="nav-link d-flex align-items-center" href="#" id="profileDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle fs-4 me-1"></i>
+                    <span *ngIf="userName" class="ms-1">{{ userName }}</span>
+                  </a>
+
+
+                  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdown">
+                    <li>
+                      <a class="dropdown-item" routerLink="/home/rating">⭐ Rate Us</a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <a class="dropdown-item text-danger fw-semibold" (click)="logout()" style="cursor: pointer;">🚪 Logout</a>
+                    </li>
+                  </ul>
+                </li>
+
+
               </ul>
 
 

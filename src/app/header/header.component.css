@@ -73,6 +73,31 @@
         color: #14532d !important;
       }
 
+      .dropdown-menu {
+        min-width: 180px;
+      }
+      .dropdown-item.text-danger:hover {
+        background-color: #ffecec;
+        color: #b30000;
+      }
+      .profile-nav {
+        margin-top: -4px; /* raise the icon slightly */
+        padding-left: 1rem; /* optional extra spacing from the other nav links */
+      }
+
+      .profile-nav span {
+        font-weight: 500;
+        font-size: 1rem;
+        color: #333;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+
+
+
       
     @media (max-width: 768px) {
         .hero img {

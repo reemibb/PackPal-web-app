@@ -52,9 +52,31 @@ getCountries() {
   return this.http.get<any>(this.baseUrl + 'get_countries.php');
 }
 
+getTipsImages() {
+  return this.http.get<any>(this.baseUrl + 'get_tips_images.php');
+}
 
+getTipsContent() {
+  return this.http.get<any>(this.baseUrl + 'get_tips_content.php');
+}
 
+getContactContent() {
+  return this.http.get<any>(this.baseUrl + 'get_contact_content.php');
+}
 
+sendMessage(userId: number, name: string, email: string, subject: string, message: string): Observable<any> {
+  return this.http.post(this.baseUrl + 'send_message.php', {
+    user_id: userId,
+    name: name,
+    email: email,
+    subject: subject,
+    message: message
+  });
+}
+
+getUserName(userId: number) {
+  return this.http.get<{ firstname: string }>(`${this.baseUrl}get_user_name.php?user_id=${userId}`);
+}
 
 
 }

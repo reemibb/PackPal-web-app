@@ -1,16 +1,16 @@
 <section class="tips-section">
     <div class="container">
       <div class="text-center mb-5">
-        <h2 class="fw-bold">Travel Packing Tips</h2>
-        <p class="text-muted">Make your trip smoother with these handy tips!</p>
+        <h2 class="fw-bold">{{content.title}}</h2>
+        <p class="text-muted">{{content.subtitle}}</p>
       </div>
 
       <div class="row g-4">
         <div class="col-md-6 col-lg-4">
           <div class="card tip-card h-100" data-bs-toggle="modal" data-bs-target="#rollDontFoldModal" style="cursor: pointer;">
             <div class="card-body">
-              <h5 class="card-title">Roll, Don't Fold</h5>
-              <p class="card-text">Rolling clothes instead of folding saves space and reduces wrinkles.</p>
+              <h5 class="card-title">{{content.tipTitle1}}</h5>
+              <p class="card-text">{{content.tipSubtitle1}}</p>
               <span class="click-more mt-auto">Click to learn more →</span>
             </div>
           </div>
@@ -19,8 +19,8 @@
         <div class="col-md-6 col-lg-4">
           <div class="card tip-card h-100" data-bs-toggle="modal" data-bs-target="#packingCubesModal" style="cursor: pointer;">
             <div class="card-body">
-              <h5 class="card-title">Use Packing Cubes</h5>
-              <p class="card-text">Stay organized and maximize space using compression packing cubes.</p>
+              <h5 class="card-title">{{content.tipTitle2}}</h5>
+              <p class="card-text">{{content.tipSubtitle2}}</p>
               <span class="click-more mt-auto">Click to learn more →</span>
             </div>
           </div>
@@ -29,8 +29,8 @@
         <div class="col-md-6 col-lg-4">
           <div class="card tip-card h-100" data-bs-toggle="modal" data-bs-target="#packByOutfitModal" style="cursor: pointer;">
             <div class="card-body">
-              <h5 class="card-title">Pack by Outfit</h5>
-              <p class="card-text">Avoid overpacking by planning your outfits ahead of time.</p>
+              <h5 class="card-title">{{content.tipTitle3}}</h5>
+              <p class="card-text">{{content.tipSubtitle3}}</p>
               <span class="click-more mt-auto">Click to learn more →</span>
             </div>
           </div>
@@ -43,20 +43,16 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="rollDontFoldModalLabel">Roll, Don't Fold</h5>
+          <h5 class="modal-title" id="rollDontFoldModalLabel">{{content.tipTitle1}}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <img src="tip1.jpeg" class="modal-tip-img mb-3" alt="Rolling clothes">
-          <p>Rolling your clothes instead of folding them has several advantages:</p>
-          <ul>
-            <li>Saves up to 30% more space in your luggage</li>
-            <li>Reduces wrinkles and creases in your clothing</li>
-            <li>Makes it easier to see all items at a glance</li>
-            <li>Allows for better organization with packing cubes</li>
-          </ul>
+          <img *ngIf="images.tip1" [src]="images.tip1" class="modal-tip-img mb-3" alt="Rolling clothes">
+          <p [innerHTML]="content.innerText1"></p>
+
+        
           <div class="alert alert-info mt-3">
-            <strong>Pro Tip:</strong> Roll similar items together (like shirts with undershirts) to create outfit bundles.
+            <strong>Pro Tip:</strong> {{content.protip1}}
           </div>
         </div>
         <div class="modal-footer">
@@ -70,20 +66,14 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="packingCubesModalLabel">Use Packing Cubes</h5>
+          <h5 class="modal-title" id="packingCubesModalLabel">{{content.tipTitle2}}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <img src="tip2.jpeg" class="modal-tip-img mb-3" alt="Packing cubes">
-          <p>Packing cubes are a game-changer for organized travel:</p>
-          <ul>
-            <li>Compress clothing to save valuable suitcase space</li>
-            <li>Keep similar items together (undergarments, tops, bottoms)</li>
-            <li>Separate clean and dirty clothes during your trip</li>
-            <li>Make unpacking at your destination a breeze</li>
-          </ul>
+          <img *ngIf="images.tip2" [src]="images.tip2" class="modal-tip-img mb-3" alt="Packing cubes">
+          <p [innerHTML]="content.innerText2"></p>
           <div class="alert alert-info mt-3">
-            <strong>Pro Tip:</strong> Use different colored cubes for each family member or category of items.
+            <strong>Pro Tip:</strong> {{content.protip2}}
           </div>
         </div>
         <div class="modal-footer">
@@ -97,20 +87,14 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="packByOutfitModalLabel">Pack by Outfit</h5>
+          <h5 class="modal-title" id="packByOutfitModalLabel">{{content.tipTitle3}}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <img src="tip3.jpeg" class="modal-tip-img mb-3" alt="Outfit planning">
-          <p>Packing by outfit helps eliminate unnecessary items:</p>
-          <ul>
-            <li>Plan complete outfits for each day/activity</li>
-            <li>Choose versatile pieces that can mix and match</li>
-            <li>Limit shoes to 2-3 pairs that work with multiple outfits</li>
-            <li>Consider doing laundry on longer trips</li>
-          </ul>
+          <img *ngIf="images.tip3" [src]="images.tip3" class="modal-tip-img mb-3" alt="Outfit planning">
+          <p [innerHTML]="content.innerText3"></p>
           <div class="alert alert-info mt-3">
-            <strong>Pro Tip:</strong> Take photos of your planned outfits before packing to visualize combinations.
+            <strong>Pro Tip:</strong> {{content.protip3}}
           </div>
         </div>
         <div class="modal-footer">

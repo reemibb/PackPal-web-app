@@ -1,0 +1,13 @@
+.card {
+  border-radius: 1rem;
+}
+
+.bi-star,
+.bi-star-fill {
+  transition: transform 0.2s ease;
+}
+
+.bi-star:hover,
+.bi-star-fill:hover {
+  transform: scale(1.2);
+}

@@ -7,6 +7,7 @@
 
     .contact-section {
       padding: 60px 0;
+      background: rgba(150, 192, 149, 0.6);
     }
 
     .form-control, .form-select {
@@ -40,3 +41,17 @@
       border: none;
       border-radius: 10px;
     }
+    .toast-container {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

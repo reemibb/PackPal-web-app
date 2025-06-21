@@ -38,6 +38,9 @@ export class GenerateComponent implements OnInit, AfterViewInit {
   packedMap: { [item: string]: boolean } = {};
   lastPackingListId: number = 0;
 
+  alertMessage: string = '';
+  alertType: 'success' | 'danger' | 'warning' | '' = '';
+
 
 
   constructor(private connectService: ConnectService, private http: HttpClient) {}
@@ -313,20 +316,28 @@ saveChecklistProgress() {
   console.log('📤 Sending payload:', payload);
 
   this.http.post('http://localhost/final-asp-php/save_checklist.php', payload).subscribe({
-    next: (response: any) => {
-      console.log('✅ Save response:', response);
-      if (response.success) {
-        alert('✅ Progress saved successfully!');
-      } else {
-        alert('❌ Failed to save: ' + (response.message || 'Unknown error'));
-      }
-    },
-    error: (err) => {
-      console.error('❌ Error saving checklist progress:', err);
-      alert('❌ Failed to save progress: ' + (err.message || 'Network error'));
+  next: (response: any) => {
+    if (response.success) {
+      this.alertMessage = '✅ Progress saved successfully!';
+      this.alertType = 'success';
+    } else {
+      this.alertMessage = '❌ Failed to save: ' + (response.message || 'Unknown error');
+      this.alertType = 'danger';
     }
-  });
+  },
+  error: (err) => {
+    console.error('❌ Error saving checklist progress:', err);
+    this.alertMessage = '❌ Failed to save progress: ' + (err.message || 'Network error');
+    this.alertType = 'danger';
+  }
+});
+
 }
+closeAlert() {
+  this.alertMessage = '';
+  this.alertType = '';
+}
+
 onChecklistChange(item: string, checked: boolean) {
   this.packedMap[item] = checked;
 

@@ -7,6 +7,7 @@ import { GenerateComponent } from './generate/generate.component';
 import { TipsComponent } from './tips/tips.component';
 import { ContactComponent } from './contact/contact.component';
 import { BodyComponent } from './body/body.component';
+import { RatingComponent } from './rating/rating.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -19,7 +20,8 @@ const routes: Routes = [
       { path: '', component: BodyComponent },           // default under /home
       { path: 'generate', component: GenerateComponent },
       { path: 'tips', component: TipsComponent },
-      { path: 'contact', component: ContactComponent }
+      { path: 'contact', component: ContactComponent },
+      { path: 'rating', component: RatingComponent }
     ]
   },
 ];

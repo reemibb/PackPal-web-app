@@ -1,1 +1,48 @@
-<p>rating works!</p>
+<div class="container py-5" style="background: rgba(105, 187, 102, 0.6);">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg border-0">
+        <div class="card-body">
+          <h2 class="text-center mb-4 text-success">⭐ Rate Us</h2>
+
+          <!-- Star rating -->
+          <div class="d-flex justify-content-center mb-4">
+            <ng-container *ngFor="let star of stars; index as i">
+              <i
+                class="bi"
+                [ngClass]="i < selectedRating ? 'bi-star-fill text-warning' : 'bi-star text-muted'"
+                (click)="selectRating(i + 1)"
+                style="font-size: 2rem; cursor: pointer;"
+              ></i>
+            </ng-container>
+          </div>
+
+          <!-- Feedback -->
+          <div class="mb-3">
+            <label for="feedback" class="form-label fw-semibold">Your Feedback</label>
+            <textarea
+              id="feedback"
+              class="form-control"
+              rows="4"
+              placeholder="Let us know what you think..."
+              [(ngModel)]="feedback"
+              name="feedback"
+            ></textarea>
+          </div>
+
+          <!-- Submit button -->
+          <div class="d-grid">
+            <button class="btn btn-dark-green" (click)="submitRating()" [disabled]="isSubmitting">
+              {{ isSubmitting ? 'Sending...' : 'Submit Rating' }}
+            </button>
+          </div>
+
+          <!-- Confirmation -->
+          <div *ngIf="ratingSubmitted" class="alert alert-success mt-3 text-center">
+            Thank you for your rating!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
