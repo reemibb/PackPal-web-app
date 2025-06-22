@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
     ngOnInit(): void {
       this.connectService.getLogoUrl().subscribe({
         next: (res) => {
-          console.log('Logo response:', res); // Add this line
+          console.log('Logo response:', res); 
           this.logoUrl = res.url;
         },
         error: () => console.error('Failed to load logo')
@@ -48,11 +48,11 @@ onImageError(event: any): void {
 }
   
 logout(): void {
-  // Clear localStorage (or sessionStorage depending on what you're using)
+  
   localStorage.removeItem('user_id');
-  localStorage.clear(); // Optional: wipes everything
+  localStorage.clear(); 
 
-  // Redirect to login
+  
   this.router.navigate(['/login']);
 }
 

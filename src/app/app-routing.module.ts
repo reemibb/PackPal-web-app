@@ -15,9 +15,9 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {
     path: 'home',
-    component: HomeComponent, // layout wrapper with header/footer
+    component: HomeComponent,
     children: [
-      { path: '', component: BodyComponent },           // default under /home
+      { path: '', component: BodyComponent },     
       { path: 'generate', component: GenerateComponent },
       { path: 'tips', component: TipsComponent },
       { path: 'contact', component: ContactComponent },

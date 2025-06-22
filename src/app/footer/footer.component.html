@@ -1,5 +1,33 @@
-<div class="footer">
-    <div class="container">
-      <p class="mb-0">© {{ content.rights }}</p>
+
+<footer class="footer bg-dark text-white pt-5 pb-4 mt-5">
+  <div class="container text-md-left">
+    <div class="row text-md-left text-center">
+      <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
+        <h5 class="text-uppercase fw-bold text-success">{{content.title}}</h5>
+        <p>
+          {{bodycontent.subtitle}}
+        </p>
+      </div>
+
+      <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+        <h6 class="text-uppercase fw-bold">Follow Us</h6>
+        <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
+        <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+        <a href="#" class="text-white"><i class="bi bi-linkedin"></i></a>
+      </div>
+
+      <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+        <h6 class="text-uppercase fw-bold">Contact</h6>
+        <p><i class="bi bi-geo-alt me-2"></i> {{contactcontent.address}}</p>
+        <p><i class="bi bi-envelope me-2"></i> {{contactcontent.email}}</p>
+        <p><i class="bi bi-phone me-2"></i> {{contactcontent.phone}}</p>
+      </div>
+
     </div>
   </div>
+
+  <div class="text-center mt-4">
+    <p class="mb-0">{{content.rights}}</p>
+  </div>
+</footer>

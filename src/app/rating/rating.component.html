@@ -5,7 +5,6 @@
         <div class="card-body">
           <h2 class="text-center mb-4 text-success">⭐ Rate Us</h2>
 
-          <!-- Star rating -->
           <div class="d-flex justify-content-center mb-4">
             <ng-container *ngFor="let star of stars; index as i">
               <i
@@ -17,8 +16,7 @@
             </ng-container>
           </div>
 
-          <!-- Feedback -->
-          <div class="mb-3">
+          <div class="mb-4">
             <label for="feedback" class="form-label fw-semibold">Your Feedback</label>
             <textarea
               id="feedback"
@@ -30,16 +28,37 @@
             ></textarea>
           </div>
 
-          <!-- Submit button -->
-          <div class="d-grid">
-            <button class="btn btn-dark-green" (click)="submitRating()" [disabled]="isSubmitting">
-              {{ isSubmitting ? 'Sending...' : 'Submit Rating' }}
+          <div class="d-grid mb-3">
+            <button 
+              class="btn btn-lg position-relative overflow-hidden" 
+              [ngClass]="{'btn-success': !isSubmitting, 'btn-secondary': isSubmitting}" 
+              style="
+                border-radius: 30px;
+                box-shadow: 0 4px 15px rgba(105, 187, 102, 0.6);
+                transition: all 0.3s ease;
+              "
+              [disabled]="isSubmitting"
+              (click)="submitRating()"
+              [style.transform]="isSubmitting ? 'scale(0.98)' : 'scale(1)'"
+            >
+              <span class="d-flex align-items-center justify-content-center">
+                <i class="bi" [ngClass]="isSubmitting ? 'bi-hourglass-split me-2' : 'bi-send-fill me-2'"></i>
+                {{ isSubmitting ? 'Submitting...' : 'Submit Rating' }}
+              </span>
+              <div 
+                *ngIf="isSubmitting"
+                class="position-absolute top-0 start-0 h-100" 
+                style="
+                  width: 100%;
+                  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+                  animation: button-loading 1.5s infinite;
+                "
+              ></div>
             </button>
           </div>
-
-          <!-- Confirmation -->
-          <div *ngIf="ratingSubmitted" class="alert alert-success mt-3 text-center">
-            Thank you for your rating!
+          <div *ngIf="ratingSubmitted" class="alert alert-success mt-3 text-center animate__animated animate__fadeIn">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            Thank you for your feedback! We appreciate your time.
           </div>
         </div>
       </div>

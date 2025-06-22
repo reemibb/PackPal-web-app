@@ -11,3 +11,21 @@
 .bi-star-fill:hover {
   transform: scale(1.2);
 }
+
+@keyframes button-loading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  .btn:hover:not(:disabled) {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 6px 20px rgba(105, 187, 102, 0.7) !important;
+  }
+  
+  .btn:active:not(:disabled) {
+    transform: scale(0.97) !important;
+  }
+  
+  .animate__fadeIn {
+    animation-duration: 0.8s;
+  }

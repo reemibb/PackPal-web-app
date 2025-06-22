@@ -29,7 +29,6 @@
         </select>
       </div>
 
-      <!-- Activities Section (ONLY this block, remove any duplicates) -->
       <div class="mt-4">
         <label class="form-label">🎯 Activities</label><br>
         <div class="form-check form-check-inline" *ngFor="let activity of content.activities; let i = index">
@@ -160,7 +159,7 @@
 
     <div class="d-flex justify-content-between mt-3">
       <button class="btn btn-outline-dark-green" (click)="saveChecklistProgress()">Save Checklist</button>
-      <button class="btn btn-outline-dark-green">Print Checklist</button>
+      <button class="btn btn-outline-dark-green" (click)="printChecklist()">Print Checklist</button>
     </div>
   </div>
 </div>

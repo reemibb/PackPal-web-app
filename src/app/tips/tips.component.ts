@@ -27,6 +27,5 @@ export class TipsComponent implements OnInit {
     });
   }
 
-  // Add any methods or properties needed for the tips component
 
 }

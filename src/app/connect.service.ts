@@ -78,5 +78,16 @@ getUserName(userId: number) {
   return this.http.get<{ firstname: string }>(`${this.baseUrl}get_user_name.php?user_id=${userId}`);
 }
 
+submitRating(userId: number, rating: number, feedback: string): Observable<any> {
+  return this.http.post(this.baseUrl + 'submit_rating.php', {
+    user_id: userId,
+    rating: rating,
+    feedback: feedback
+  }); 
+}
+
+getRatings(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}get_ratings.php`);
+}
 
 }

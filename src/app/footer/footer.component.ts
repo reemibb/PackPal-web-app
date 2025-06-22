@@ -9,6 +9,8 @@ import { ConnectService } from '../connect.service';
 export class FooterComponent implements OnInit{
 
   content: any = {};
+  bodycontent: any = {};
+  contactcontent: any = {};
 
   constructor(private connectService: ConnectService) {}
 
@@ -17,6 +19,15 @@ export class FooterComponent implements OnInit{
       next: (res) => this.content = res,
       error: () => console.error('Failed to load footer content')
     });
+    this.connectService.getBodyContent().subscribe({
+      next: (res) => this.bodycontent = res,
+      error: () => console.error('Failed to load footer content')
+    });
+    this.connectService.getContactContent().subscribe({
+      next: (res) => this.contactcontent = res,
+      error: () => console.error('Failed to load footer content')
+    });
+
   }
 
 }

@@ -12,7 +12,7 @@ export class ContactComponent implements OnInit {
   content: any = {};
   userId: number = 0; 
   showAlert = false;
-  isSubmitting = false; // Add loading state
+  isSubmitting = false; 
   toastMessage: string | null = null;
 
   formData = {
@@ -25,7 +25,6 @@ export class ContactComponent implements OnInit {
   constructor(private connectService: ConnectService) {}
 
   ngOnInit(): void {
-    // Remove duplicate call
     this.connectService.getContactContent().subscribe({
       next: res => {
         console.log('Contact content loaded:', res);
@@ -36,19 +35,16 @@ export class ContactComponent implements OnInit {
       }
     });
 
-    // Get user ID from localStorage
     const userIdStr = localStorage.getItem('user_id');
     this.userId = userIdStr ? Number(userIdStr) : 0;
     console.log('User ID from localStorage:', this.userId);
     
-    // Warn if no user ID (optional)
     if (this.userId <= 0) {
       console.warn('No valid user ID found. User might not be logged in.');
     }
   }
 
   submitMessage() {
-    // Validate form data
     if (!this.formData.name.trim() || !this.formData.email.trim() || 
         !this.formData.subject.trim() || !this.formData.message.trim()) {
       this.toastMessage = '';
@@ -56,7 +52,6 @@ export class ContactComponent implements OnInit {
       return;
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.formData.email)) {
       this.toastMessage = 'Please enter a valid email address.';
@@ -86,7 +81,6 @@ export class ContactComponent implements OnInit {
           this.showAlert = true;
           setTimeout(() => this.showAlert = false, 5000);
           
-          // Clear form
           this.formData = {
             name: '',
             email: '',

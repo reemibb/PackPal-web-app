@@ -23,34 +23,39 @@
     </div>
     <div class="row">
       <div class="col-md-8 mx-auto">
-        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div *ngIf="ratings.length === 0" class="text-center text-muted p-4">
+          <p>No ratings available yet. Be the first to rate us!</p>
+        </div>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" *ngIf="ratings.length > 0">
           <div class="carousel-inner">
-            <div class="carousel-item active">
-              <div class="card border-0 shadow-sm">
-                <div class="card-body text-center p-4">
-                  <img *ngIf="images.reem" [src]="images.reem" class="rounded-circle mb-3" width="80" alt="User">
-                  <p class="lead">"PackPal saved me so much time packing for my Japan trip! The weather-aware suggestions were spot on."</p>
-                  <h5 class="mb-1">Reem Ib.</h5>
-                  <div class="text-warning mb-3">★★★★★</div>
+            <ng-container *ngFor="let rating of ratings; let i = index">
+              <div class="carousel-item" [ngClass]="{'active': i === 0}">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-body text-center p-4">
+                    <div class="avatar mb-3 mx-auto bg-light rounded-circle d-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px; font-size: 24px; color: #69BB66;">
+                      <span *ngIf="rating.firstname">{{ rating.firstname.charAt(0) }}{{ rating.lastname ? rating.lastname.charAt(0) : '' }}</span>
+                      <i *ngIf="!rating.firstname" class="bi bi-person"></i>
+                    </div>
+                    
+                    <p class="lead">"{{ rating.feedback }}"</p>
+                    <h5 class="mb-1">{{ rating.firstname }} {{ rating.lastname }}</h5>
+                    <div class="text-warning mb-3">
+                      <ng-container *ngFor="let star of generateStars(rating.rating)">
+                        <i class="bi" [ngClass]="star === 'filled' ? 'bi-star-fill' : 'bi-star'"></i>
+                      </ng-container>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="carousel-item">
-              <div class="card border-0 shadow-sm">
-                <div class="card-body text-center p-4">
-                  <img *ngIf="images.nour" [src]="images.nour" class="rounded-circle mb-3" width="80" alt="User">
-                  <p class="lead">"As a frequent business traveler, PackPal helps me maintain consistency in my packing routine."</p>
-                  <h5 class="mb-1">Nour Az.</h5>
-                  <div class="text-warning mb-3">★★★★☆</div>
-                </div>
-              </div>
-            </div>
+            </ng-container>
           </div>
-          <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+          
+          <button *ngIf="ratings.length > 1" class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
           </button>
-          <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+          <button *ngIf="ratings.length > 1" class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>

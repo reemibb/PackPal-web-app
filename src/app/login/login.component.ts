@@ -22,7 +22,7 @@ export class LoginComponent {
       if (response.success) {
         this.message = 'Login successful! Redirecting...';
         localStorage.setItem('user_id', response.user.id);
-        this.router.navigate(['/home']);  // Redirect here
+        this.router.navigate(['/home']);  
       } else {
         this.message = response.message || 'Login failed.';
       }
