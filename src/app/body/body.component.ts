@@ -1,6 +1,8 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, HostListener, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ConnectService } from '../connect.service';
+import { Subscription, forkJoin, of } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-body',
@@ -8,89 +10,159 @@ import { ConnectService } from '../connect.service';
   templateUrl: './body.component.html',
   styleUrls: ['./body.component.css']
 })
-export class BodyComponent implements OnInit {
-  images: any = {};
-  content: any = {};
+export class BodyComponent implements OnInit, OnDestroy {
+  // Default values for when API calls fail
+  images: any = {
+    pack: ''
+  };
+  content: any = {
+    title: 'Welcome to Our Platform',
+    subtitle: 'Your journey begins here',
+    alert: 'Welcome to our service!',
+    whyHeader: 'Why Choose Us',
+    whySub: 'Discover the benefits of our service',
+    whyHeader1: 'Feature 1',
+    whySub1: 'Description of feature 1',
+    whyHeader2: 'Feature 2',
+    whySub2: 'Description of feature 2',
+    whyHeader3: 'Feature 3',
+    whySub3: 'Description of feature 3',
+    howHeader: 'How It Works',
+    howSub1: 'Step 1',
+    howSub2: 'Step 2',
+    howSub3: 'Step 3',
+    howSub4: 'Step 4',
+    tipHeader: 'Subscribe to Our Newsletter',
+    subscribe: 'Get travel tips delivered to your inbox'
+  };
+  
   email: string = '';
-  userId: number = 0; 
+  userId: number = 0;
   showAlert = false;
   ratings: any[] = [];
   loadingRatings = true;
   hasError = false;
   errorMessage = '';
+  innerWidth: number = 0;
+  
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private connectService: ConnectService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.innerWidth = window.innerWidth;
+    }
+  }
 
-  async ngOnInit() {
-    this.connectService.getBodyImages().subscribe({
-      next: res => this.images = res,
-      error: () => console.error('Failed to load images')
-    });
-    
-    this.connectService.getBodyContent().subscribe({
-      next: res => this.content = res,
-      error: () => console.error('Failed to load body content')
-    });
-    this.connectService.getRatings().subscribe({
-      next: res => {
-        this.ratings = res;
-        console.log('Loaded ratings:', this.ratings);  
-      },
-      error: err => console.error('Failed to load ratings:', err)
-    });
-    
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.innerWidth = window.innerWidth;
+    }
+  }
+
+  ngOnInit() {
+    this.loadInitialData();
+    if (isPlatformBrowser(this.platformId)) {
+      this.userId = Number(localStorage.getItem('user_id') || '0');
+    }
+  }
+
+  ngOnDestroy() {
+    // Clean up subscriptions to prevent memory leaks
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  loadInitialData() {
+    // Show loading state for ratings
     this.loadingRatings = true;
-    this.connectService.getRatings().subscribe({
-      next: res => {
-        console.log('Raw response from getRatings():', res);
-        
-        if (Array.isArray(res)) {
-          this.ratings = res;
-          console.log('Loaded ratings:', this.ratings);
-        } else {
-          console.error('Expected an array but got:', typeof res);
-          this.hasError = true;
-          this.errorMessage = 'Invalid response format';
-          this.ratings = [];
-        }
-        
-        this.loadingRatings = false;
-      },
-      error: err => {
-        console.error('Failed to load ratings:', err);
-        this.loadingRatings = false;
-        this.hasError = true;
-        this.errorMessage = 'Failed to load ratings';
+    
+    // Create a subscription for images
+    const imagesSub = this.connectService.getBodyImages().pipe(
+      catchError(error => {
+        console.error('Failed to load images:', error);
+        return of(this.images); // Return default values on error
+      })
+    ).subscribe(res => {
+      if (res && Object.keys(res).length > 0) {
+        this.images = res;
       }
     });
     
-    this.userId = Number(localStorage.getItem('user_id'));
+    // Create a subscription for content
+    const contentSub = this.connectService.getBodyContent().pipe(
+      catchError(error => {
+        console.error('Failed to load body content:', error);
+        return of(this.content); // Return default values on error
+      })
+    ).subscribe(res => {
+      if (res && Object.keys(res).length > 0) {
+        // Merge default values with API response to ensure all fields are present
+        this.content = { ...this.content, ...res };
+      }
+    });
+    
+    // Create a subscription for ratings with proper error handling
+    const ratingsSub = this.connectService.getRatings().pipe(
+      catchError(error => {
+        console.error('Failed to load ratings:', error);
+        this.hasError = true;
+        this.errorMessage = 'Failed to load ratings';
+        return of([]);
+      }),
+      finalize(() => {
+        this.loadingRatings = false;
+      })
+    ).subscribe(res => {
+      if (Array.isArray(res)) {
+        this.ratings = res;
+      } else {
+        console.error('Expected an array but got:', typeof res);
+        this.hasError = true;
+        this.errorMessage = 'Invalid response format';
+        this.ratings = [];
+      }
+    });
+    
+    // Add subscriptions to our tracking array
+    this.subscriptions.push(imagesSub, contentSub, ratingsSub);
   }
   
   subscribe() {
-    if (!this.email || !this.userId) return;
+    if (!this.email || !this.userId) {
+      return;
+    }
 
-    this.connectService.subscribeUser(this.userId, this.email).subscribe(
-      (res: any) => {
-        if (res.success) {
-          this.showAlert = true;
-          setTimeout(() => this.showAlert = false, 5000); 
-          this.email = ''; 
-        } else {
-          alert(res.message || "Subscription failed.");
-        }
-      },
-      () => alert("Server error during subscription.")
-    );
+    const subscription = this.connectService.subscribeUser(this.userId, this.email).pipe(
+      catchError(error => {
+        console.error('Subscription error:', error);
+        // Show user-friendly error
+        alert("Server error during subscription. Please try again later.");
+        return of({ success: false, message: "Server error" });
+      })
+    ).subscribe((res: any) => {
+      if (res.success) {
+        this.showAlert = true;
+        // Reset the email field
+        this.email = '';
+        // Auto-hide the alert after 5 seconds
+        setTimeout(() => this.showAlert = false, 5000);
+      } else {
+        alert(res.message || "Subscription failed. Please try again.");
+      }
+    });
+
+    this.subscriptions.push(subscription);
   }
   
   generateStars(rating: number): string[] {
+    // Ensure rating is a number and in bounds
+    const safeRating = !isNaN(rating) ? Math.min(Math.max(rating, 0), 5) : 0;
     const stars = [];
     for (let i = 0; i < 5; i++) {
-      stars.push(i < rating ? 'filled' : 'empty');
+      stars.push(i < safeRating ? 'filled' : 'empty');
     }
     return stars;
   }

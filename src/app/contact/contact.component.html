@@ -1,48 +1,49 @@
 <section class="contact-section">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="fw-bold">{{content.title}}</h2>
-      <p class="text-muted">{{content.subtitle}}</p>
+      <h2 class="fw-bold">{{content.title || 'Contact Us'}}</h2>
+      <p class="text-muted">{{content.subtitle || 'We\'d love to hear from you. Send us a message!'}}</p>
     </div>
 
-    <div class="row g-5">
-      <div class="col-lg-5">
+    <div class="row g-4">
+      <!-- Contact Information -->
+      <div class="col-lg-5 mb-4 mb-lg-0">
         <div class="contact-info">
           <h5>📍 Address</h5>
-          <p>{{content.address}}</p>
+          <p>{{content.address || '123 PackPal Street, Packcity, PC 12345'}}</p>
 
           <h5>📞 Phone</h5>
-          <p>{{content.phone}}</p>
+          <p>
+            <a href="tel:{{content.phone || '+1 (555) 123-4567'}}" class="contact-link">
+              {{content.phone || '+1 (555) 123-4567'}}
+            </a>
+          </p>
 
           <h5>✉️ Email</h5>
-          <p>{{content.email}}</p>
+          <p>
+            <a href="mailto:{{content.email || 'info@packpal.com'}}" class="contact-link">
+              {{content.email || 'info@packpal.com'}}
+            </a>
+          </p>
 
           <h5>🕒 Hours</h5>
-          <p>{{content.hours}}</p>
+          <p>{{content.hours || 'Monday - Friday: 9 AM - 5 PM'}}</p>
         </div>
       </div>
 
+      <!-- Contact Form -->
       <div class="col-lg-7">
-        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;" *ngIf="toastMessage">
-          <div class="toast align-items-center text-white bg-success border-0 show fade" role="alert">
-            <div class="d-flex">
-              <div class="toast-body">
-                {{ toastMessage }}
-              </div>
-              <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="toastMessage = null"></button>
-            </div>
-          </div>
-        </div>
-
-        <form (ngSubmit)="submitMessage()" #contactForm="ngForm">
+        <form (ngSubmit)="submitMessage()" #contactForm="ngForm" novalidate>
           <div class="row g-3">
             <div class="col-md-6">
               <label for="name" class="form-label">Your Name</label>
-              <input type="text" id="name" class="form-control" placeholder="Full Name" required [(ngModel)]="formData.name" name="name">
+              <input type="text" id="name" class="form-control" placeholder="Full Name" required 
+                     [(ngModel)]="formData.name" name="name">
             </div>
             <div class="col-md-6">
               <label for="email" class="form-label">Your Email</label>
-              <input type="email" id="email" class="form-control" placeholder="mail@example.com" required [(ngModel)]="formData.email" name="email">
+              <input type="email" id="email" class="form-control" placeholder="mail@example.com" required 
+                     [(ngModel)]="formData.email" name="email">
             </div>
             <div class="col-12">
               <label for="subject" class="form-label">Subject</label>
@@ -53,12 +54,38 @@
               <textarea id="message" class="form-control" rows="5" required [(ngModel)]="formData.message" name="message"></textarea>
             </div>
             <div class="col-12 text-end">
-              <button type="submit" class="btn btn-dark-green px-4">Send Message</button>
+              <button type="submit" class="btn btn-dark-green px-4" [disabled]="isSubmitting">
+                <span class="spinner-border spinner-border-sm me-2" *ngIf="isSubmitting"></span>
+                {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+              </button>
             </div>
           </div>
         </form>
-
       </div>
-    </div> 
+    </div>
+    
+    <!-- Map Section -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="map-container">
+          <iframe [src]="mapUrl" width="100%" height="300" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed" [ngClass]="{'top-0 end-0 p-3': !isMobile, 'bottom-0 start-50 translate-middle-x p-2': isMobile}" 
+     style="z-index: 9999;" *ngIf="toastMessage !== null">
+  <div class="toast align-items-center text-white border-0 show fade" 
+       [ngClass]="toastMessage === '' || toastType === 'danger' ? 'bg-danger' : 'bg-success'" role="alert">
+    <div class="d-flex">
+      <div class="toast-body">
+        <span *ngIf="toastMessage === ''">Please fill in all required fields.</span>
+        <span *ngIf="toastMessage !== ''">{{ toastMessage }}</span>
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="toastMessage = null"></button>
+    </div>
+  </div>
+</div>

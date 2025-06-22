@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ConnectService } from '../connect.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-rating',
@@ -7,24 +8,43 @@ import { ConnectService } from '../connect.service';
   styleUrls: ['./rating.component.css'],
   standalone: false
 })
-export class RatingComponent implements OnInit {
+export class RatingComponent implements OnInit, OnDestroy {
   stars = [1, 2, 3, 4, 5];
   selectedRating = 0;
   feedback = '';
   isSubmitting = false;
   ratingSubmitted = false;
   userId: number = 0;
+  viewportHeight: number = 0;
+  viewportWidth: number = 0;
+  
+  private subscriptions: Subscription[] = [];
 
-  constructor(private connectService: ConnectService) {}
+  constructor(private connectService: ConnectService) {
+    this.updateViewportDimensions();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.updateViewportDimensions();
+  }
+  
+  updateViewportDimensions() {
+    this.viewportHeight = window.innerHeight;
+    this.viewportWidth = window.innerWidth;
+  }
 
   ngOnInit() {
     const userIdStr = localStorage.getItem('user_id');
     this.userId = userIdStr ? Number(userIdStr) : 0;
-    console.log('User ID from localStorage:', this.userId);
     
     if (this.userId <= 0) {
       console.warn('No valid user ID found. User might not be logged in.');
     }
+  }
+  
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   selectRating(rating: number) {
@@ -32,18 +52,21 @@ export class RatingComponent implements OnInit {
   }
 
   submitRating() {
-    if (!this.selectedRating) return alert('Please select a rating.');
+    if (!this.selectedRating) {
+      alert('Please select a rating.');
+      return;
+    }
 
     this.isSubmitting = true;
 
-    this.connectService.submitRating(this.userId, this.selectedRating, this.feedback)
+    const subscription = this.connectService.submitRating(this.userId, this.selectedRating, this.feedback)
       .subscribe({
         next: (response) => {
           console.log('Rating submitted successfully:', response);
           this.isSubmitting = false;
           this.ratingSubmitted = true;
           
-          
+          // Reset form fields
           this.selectedRating = 0;
           this.feedback = '';
         },
@@ -53,5 +76,7 @@ export class RatingComponent implements OnInit {
           alert('Failed to submit rating. Please try again.');
         }
       });
+    
+    this.subscriptions.push(subscription);
   }
 }

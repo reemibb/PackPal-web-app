@@ -1,62 +1,187 @@
+/* Keep original styles but enhance with responsive improvements */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #f9f9f9, #d6e6f2);
+  padding-top: 75px;
+}
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #f9f9f9, #d6e6f2);
-      padding-top: 75px;
-    }
+.tips-section {
+  padding-left: 0;
+  padding-right: 0;
+  background: rgba(105, 187, 102, 0.6);
+  min-height: calc(100vh - 75px - 80px); /* Adjust based on header and footer height */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 100px;
+}
 
-    .tips-section {
-      padding: 60px 0;
-      background: rgba(105, 187, 102, 0.6);
-    }
+.tip-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  height: 100%;
+}
 
-    .tip-card {
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-    }
+.tip-card:hover {
+  transform: translateY(-5px);
+}
 
-    .tip-card:hover {
-      transform: translateY(-5px);
-    }
+.footer {
+  background: #f0f0f0;
+  padding: 1.5rem 0;
+  text-align: center;
+}
 
-    .footer {
-      background: #f0f0f0;
-      padding: 1.5rem 0;
-      text-align: center;
-    }
+.btn-dark-green {
+  background-color: #14532d;
+  border-color: #14532d;
+  color: white;
+}
 
-    .btn-dark-green {
-      background-color: #14532d;
-      border-color: #14532d;
-      color: white;
-    }
+.btn-dark-green:hover {
+  background-color: #0f3f23;
+  border-color: #0f3f23;
+}
 
-    .btn-dark-green:hover {
-      background-color: #0f3f23;
-      border-color: #0f3f23;
-    }
-    
-    .modal-tip-img {
-      height: 200px;
-      object-fit: cover;
-      width: 100%;
-      border-radius: 8px;
-    }
-    
-    .tip-card .card-body {
-      min-height: 180px;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .tip-card .card-text {
-      flex-grow: 1;
-    }
-    
-    .click-more {
-      color: #14532d;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
+/* Updated modal image styling */
+.modal-img-container {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 0;
+  padding-bottom: 75%; /* Aspect ratio */
+}
+
+.modal-tip-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.modal-tip-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Original card styles with minor improvements */
+.tip-card .card-body {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.tip-card .card-text {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.click-more {
+  color: #14532d;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: block;
+}
+
+/* Modal dialog improvements */
+.modal-dialog.modal-lg {
+  max-width: 800px;
+}
+
+.modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Responsive improvements */
+@media (max-width: 1199.98px) {
+  .tip-card .card-body {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .tips-section {
+    padding: 50px 0;
+  }
+  
+  .modal-dialog.modal-lg {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .tips-section {
+    padding: 40px 0;
+    min-height: calc(100vh - 75px - 60px);
+  }
+  
+  .tip-card .card-body {
+    min-height: 160px;
+    padding: 1.25rem;
+  }
+  
+  .modal-content {
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .tips-section {
+    padding: 90px 15px 30px; /* Extra top padding to prevent header overlap */
+    min-height: calc(100vh - 60px);
+  }
+  
+  .tip-card {
+    margin-bottom: 15px;
+  }
+  
+  .tip-card .card-body {
+    min-height: auto;
+    padding: 1rem;
+  }
+  
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+  
+  h2.fw-bold {
+    font-size: 1.5rem;
+  }
+  
+  /* Add more top padding to ensure text is visible below fixed header */
+  .text-center.mb-5 {
+    margin-top: 15px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .tips-section {
+    padding: 20px 0;
+    background: none !important;
+  }
+  
+  .tip-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  
+  .click-more {
+    display: none;
+  }
+}

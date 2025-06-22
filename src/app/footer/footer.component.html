@@ -1,33 +1,73 @@
-
-<footer class="footer bg-dark text-white pt-5 pb-4 mt-5">
-  <div class="container text-md-left">
-    <div class="row text-md-left text-center">
-      <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
-        <h5 class="text-uppercase fw-bold text-success">{{content.title}}</h5>
-        <p>
-          {{bodycontent.subtitle}}
+<footer class="footer bg-dark text-white pt-4 pt-md-5 pb-4">
+  <div class="container-fluid px-4 px-md-5 text-center text-md-start">
+    <div class="row g-4 justify-content-center justify-content-md-between">
+      <!-- Company Info -->
+      <div class="col-12 col-md-5 col-lg-4 mb-4">
+        <h5 class="text-uppercase fw-bold mb-3">{{content?.title || 'Company Name'}}</h5>
+        <p class="mb-0 company-desc">
+          {{bodycontent?.subtitle || 'Your trusted partner for innovative solutions.'}}
         </p>
       </div>
 
-      <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-        <h6 class="text-uppercase fw-bold">Follow Us</h6>
-        <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-        <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
-        <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
-        <a href="#" class="text-white"><i class="bi bi-linkedin"></i></a>
+      <!-- Social Media -->
+      <div class="col-12 col-md-3 col-lg-3 mb-4">
+        <h6 class="text-uppercase fw-bold mb-3">Follow Us</h6>
+        <div class="social-icons d-flex flex-wrap justify-content-center justify-content-md-start">
+          <a href="#" class="text-white me-3 mb-2" aria-label="Facebook">
+            <i class="bi bi-facebook fs-5"></i>
+          </a>
+          <a href="#" class="text-white me-3 mb-2" aria-label="Twitter">
+            <i class="bi bi-twitter fs-5"></i>
+          </a>
+          <a href="#" class="text-white me-3 mb-2" aria-label="Instagram">
+            <i class="bi bi-instagram fs-5"></i>
+          </a>
+          <a href="#" class="text-white mb-2" aria-label="LinkedIn">
+            <i class="bi bi-linkedin fs-5"></i>
+          </a>
+        </div>
       </div>
 
-      <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-        <h6 class="text-uppercase fw-bold">Contact</h6>
-        <p><i class="bi bi-geo-alt me-2"></i> {{contactcontent.address}}</p>
-        <p><i class="bi bi-envelope me-2"></i> {{contactcontent.email}}</p>
-        <p><i class="bi bi-phone me-2"></i> {{contactcontent.phone}}</p>
+      <!-- Contact Info -->
+      <div class="col-12 col-md-4 col-lg-4 mb-4">
+        <h6 class="text-uppercase fw-bold mb-3">Contact</h6>
+        <div class="contact-info">
+          <p class="mb-2 d-flex align-items-center justify-content-center justify-content-md-start">
+            <i class="bi bi-geo-alt me-2"></i>
+            <span>{{contactcontent?.address || '123 Main Street, City, Country'}}</span>
+          </p>
+          <p class="mb-2 d-flex align-items-center justify-content-center justify-content-md-start">
+            <i class="bi bi-envelope me-2"></i>
+            <a href="mailto:{{contactcontent?.email || 'info@example.com'}}" class="text-white">
+              {{contactcontent?.email || 'info@example.com'}}
+            </a>
+          </p>
+          <p class="mb-0 d-flex align-items-center justify-content-center justify-content-md-start">
+            <i class="bi bi-phone me-2"></i>
+            <a href="tel:{{contactcontent?.phone || '+123456789'}}" class="text-white">
+              {{contactcontent?.phone || '+123 456 789'}}
+            </a>
+          </p>
+        </div>
       </div>
-
     </div>
   </div>
 
-  <div class="text-center mt-4">
-    <p class="mb-0">{{content.rights}}</p>
+  <!-- Copyright Section -->
+  <div class="copyright-section border-top border-secondary mt-4 pt-4 px-3">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+          <p class="mb-0 small">{{content?.rights || '© 2025 All Rights Reserved'}}</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <p class="mb-0 small">
+            <a href="#" class="text-white me-2">Terms</a>
+            <a href="#" class="text-white me-2">Privacy</a>
+            <a href="#" class="text-white">Cookies</a>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </footer>

@@ -1,64 +1,63 @@
-<div class="container py-5" style="background: rgba(105, 187, 102, 0.6);">
-  <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-      <div class="card shadow-lg border-0">
-        <div class="card-body">
-          <h2 class="text-center mb-4 text-success">⭐ Rate Us</h2>
+<div class="rating-wrapper">
+  <div class="container rating-container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0">
+          <div class="card-body">
+            <h2 class="text-center mb-4 text-success">⭐ Rate Us</h2>
 
-          <div class="d-flex justify-content-center mb-4">
-            <ng-container *ngFor="let star of stars; index as i">
-              <i
-                class="bi"
-                [ngClass]="i < selectedRating ? 'bi-star-fill text-warning' : 'bi-star text-muted'"
-                (click)="selectRating(i + 1)"
-                style="font-size: 2rem; cursor: pointer;"
-              ></i>
-            </ng-container>
-          </div>
+            <!-- Star Rating -->
+            <div class="stars-container">
+              <ng-container *ngFor="let star of stars; index as i">
+                <i
+                  class="bi"
+                  [ngClass]="i < selectedRating ? 'bi-star-fill text-warning' : 'bi-star text-muted'"
+                  (click)="selectRating(i + 1)"
+                  [attr.tabindex]="0"
+                  [attr.aria-label]="'Rate ' + (i + 1) + ' stars'"
+                  (keydown.enter)="selectRating(i + 1)"
+                  (keydown.space)="$event.preventDefault(); selectRating(i + 1);"
+                ></i>
+              </ng-container>
+            </div>
 
-          <div class="mb-4">
-            <label for="feedback" class="form-label fw-semibold">Your Feedback</label>
-            <textarea
-              id="feedback"
-              class="form-control"
-              rows="4"
-              placeholder="Let us know what you think..."
-              [(ngModel)]="feedback"
-              name="feedback"
-            ></textarea>
-          </div>
+            <!-- Feedback Form -->
+            <div class="feedback-container">
+              <label for="feedback" class="form-label fw-semibold">Your Feedback</label>
+              <textarea
+                id="feedback"
+                class="form-control"
+                rows="4"
+                placeholder="Let us know what you think..."
+                [(ngModel)]="feedback"
+                name="feedback"
+              ></textarea>
+            </div>
 
-          <div class="d-grid mb-3">
-            <button 
-              class="btn btn-lg position-relative overflow-hidden" 
-              [ngClass]="{'btn-success': !isSubmitting, 'btn-secondary': isSubmitting}" 
-              style="
-                border-radius: 30px;
-                box-shadow: 0 4px 15px rgba(105, 187, 102, 0.6);
-                transition: all 0.3s ease;
-              "
-              [disabled]="isSubmitting"
-              (click)="submitRating()"
-              [style.transform]="isSubmitting ? 'scale(0.98)' : 'scale(1)'"
-            >
-              <span class="d-flex align-items-center justify-content-center">
-                <i class="bi" [ngClass]="isSubmitting ? 'bi-hourglass-split me-2' : 'bi-send-fill me-2'"></i>
-                {{ isSubmitting ? 'Submitting...' : 'Submit Rating' }}
-              </span>
-              <div 
-                *ngIf="isSubmitting"
-                class="position-absolute top-0 start-0 h-100" 
-                style="
-                  width: 100%;
-                  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-                  animation: button-loading 1.5s infinite;
-                "
-              ></div>
-            </button>
-          </div>
-          <div *ngIf="ratingSubmitted" class="alert alert-success mt-3 text-center animate__animated animate__fadeIn">
-            <i class="bi bi-check-circle-fill me-2"></i>
-            Thank you for your feedback! We appreciate your time.
+            <!-- Submit Button -->
+            <div class="button-container">
+              <button 
+                class="btn btn-lg position-relative overflow-hidden" 
+                [ngClass]="{'btn-success': !isSubmitting, 'btn-secondary': isSubmitting}" 
+                [disabled]="isSubmitting"
+                (click)="submitRating()"
+              >
+                <span class="d-flex align-items-center justify-content-center">
+                  <i class="bi" [ngClass]="isSubmitting ? 'bi-hourglass-split me-2' : 'bi-send-fill me-2'"></i>
+                  {{ isSubmitting ? 'Submitting...' : 'Submit Rating' }}
+                </span>
+                <div 
+                  *ngIf="isSubmitting"
+                  class="loading-animation"
+                ></div>
+              </button>
+            </div>
+
+            <!-- Success Message -->
+            <div *ngIf="ratingSubmitted" class="success-message">
+              <i class="bi bi-check-circle-fill me-2"></i>
+              Thank you for your feedback! We appreciate your time.
+            </div>
           </div>
         </div>
       </div>

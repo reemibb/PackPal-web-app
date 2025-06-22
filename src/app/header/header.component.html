@@ -1,57 +1,54 @@
 <div class="container-fluid">
-    <div class="row">
-      <div class="col">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
-          <div class="container">
-            <div class="d-flex align-items-center">
-                <img *ngIf="logoUrl" [src]="logoUrl" alt="Logo" width="30" height="30" class="me-2"
-                    (error)="onImageError($event)">
-                <div *ngIf="!logoUrl" class="me-2" style="width: 30px; height: 30px; background: #ccc; border-radius: 3px;"></div>
-                <a class="navbar-brand fw-bold mb-0" routerLink="/home" style="color: #14532d">{{ content.title }}</a>
-              </div>              
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                  <a class="nav-link" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" routerLink="/home/generate" routerLinkActive="active">Generate List</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" routerLink="/home/tips" routerLinkActive="active">Tips</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" routerLink="/home/contact" routerLinkActive="active">Contact</a>
-                </li>
-                <li class="nav-item dropdown profile-nav ms-3">
-                  <a class="nav-link d-flex align-items-center" href="#" id="profileDropdown" role="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle fs-4 me-1"></i>
-                    <span *ngIf="userName" class="ms-1">{{ userName }}</span>
-                  </a>
-
-
-                  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdown">
-                    <li>
-                      <a class="dropdown-item" routerLink="/home/rating">⭐ Rate Us</a>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                      <a class="dropdown-item text-danger fw-semibold" (click)="logout()" style="cursor: pointer;">🚪 Logout</a>
-                    </li>
-                  </ul>
-                </li>
-
-
-              </ul>
-
-
-            </div>
+  <div class="row">
+    <div class="col">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
+        <div class="container-fluid px-lg-4">
+          <div class="d-flex align-items-center">
+            <img *ngIf="logoUrl" [src]="logoUrl" alt="Logo" class="logo-img me-2"
+                (error)="onImageError($event)">
+            <div *ngIf="!logoUrl" class="placeholder-logo me-2"></div>
+            <a class="navbar-brand fw-bold mb-0 brand-text" routerLink="/home">{{ content.title || 'Home' }}</a>
           </div>
-        </nav>
-      </div>
+          
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                  aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+              <li class="nav-item">
+                <a class="nav-link px-md-3 py-2" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link px-md-3 py-2" routerLink="/home/generate" routerLinkActive="active">Generate List</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link px-md-3 py-2" routerLink="/home/tips" routerLinkActive="active">Tips</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link px-md-3 py-2" routerLink="/home/contact" routerLinkActive="active">Contact</a>
+              </li>
+              <li class="nav-item dropdown profile-nav ms-md-3">
+                <a class="nav-link d-flex align-items-center" href="#" id="profileDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-person-circle fs-5 me-1"></i>
+                  <span *ngIf="userName" class="ms-1 d-none d-sm-inline user-name">{{ userName }}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdown">
+                  <li>
+                    <a class="dropdown-item py-2" routerLink="/home/rating">⭐ Rate Us</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <a class="dropdown-item text-danger fw-semibold py-2" (click)="logout()" style="cursor: pointer;">🚪 Logout</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     </div>
   </div>
+</div>

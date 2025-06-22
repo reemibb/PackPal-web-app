@@ -1,169 +1,206 @@
 <div class="alert alert-warning alert-dismissible fade show mb-0 text-center" role="alert">
-  {{ content.alert }}
+  <span class="alert-content">{{ content.alert }}</span>
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
- <div class="hero d-flex align-items-center">
-    <div class="hero-overlay"></div>
-    <div class="container hero-content text-center">
-      <div class="row">
-        <div class="col">
-          <img *ngIf="images.pack" [src]="images.pack" alt="Pack Icon" class="img-fluid mb-4 rounded shadow" style="max-width: 600px; height: 310px;">
-          <h1 class="display-4 fw-bold">{{ content.title }}</h1>
-          <p class="lead">{{ content.subtitle }}</p>
-            <a routerLink="/home/generate" class="btn btn-dark-green btn-lg mt-3">Get Started</a>
+
+<!-- Hero Section -->
+<div class="hero d-flex align-items-center">
+  <div class="hero-overlay"></div>
+  <div class="container-fluid container-md hero-content text-center px-4">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div class="hero-image-container mb-3 mb-md-4">
+          <img *ngIf="images.pack" [src]="images.pack" alt="Pack Icon" class="hero-image img-fluid rounded shadow">
+          <div *ngIf="!images.pack" class="hero-image-placeholder rounded shadow"></div>
         </div>
+        <h1 class="display-4 fw-bold hero-title">{{ content.title || 'Welcome to Our Platform' }}</h1>
+        <p class="lead hero-subtitle">{{ content.subtitle || 'Your journey begins here' }}</p>
+        <a routerLink="/home/generate" class="btn btn-dark-green btn-lg mt-3 px-4 py-2 rounded-pill">Get Started</a>
       </div>
     </div>
   </div>
-  <div class="container py-5 bg-white">
-    <div class="row text-center mb-4">
-      <div class="col">
-        <h2 class="section-title">What Travelers Say</h2>
-      </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="container-fluid py-5 bg-white px-3 px-md-5">
+  <div class="row text-center mb-4">
+    <div class="col-12">
+      <h2 class="section-title">What Travelers Say</h2>
     </div>
-    <div class="row">
-      <div class="col-md-8 mx-auto">
-        <div *ngIf="ratings.length === 0" class="text-center text-muted p-4">
-          <p>No ratings available yet. Be the first to rate us!</p>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+      <!-- Loading state -->
+      <div *ngIf="loadingRatings" class="text-center p-4">
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" *ngIf="ratings.length > 0">
-          <div class="carousel-inner">
-            <ng-container *ngFor="let rating of ratings; let i = index">
-              <div class="carousel-item" [ngClass]="{'active': i === 0}">
-                <div class="card border-0 shadow-sm">
-                  <div class="card-body text-center p-4">
-                    <div class="avatar mb-3 mx-auto bg-light rounded-circle d-flex align-items-center justify-content-center" 
-                         style="width: 80px; height: 80px; font-size: 24px; color: #69BB66;">
-                      <span *ngIf="rating.firstname">{{ rating.firstname.charAt(0) }}{{ rating.lastname ? rating.lastname.charAt(0) : '' }}</span>
-                      <i *ngIf="!rating.firstname" class="bi bi-person"></i>
-                    </div>
-                    
-                    <p class="lead">"{{ rating.feedback }}"</p>
-                    <h5 class="mb-1">{{ rating.firstname }} {{ rating.lastname }}</h5>
-                    <div class="text-warning mb-3">
-                      <ng-container *ngFor="let star of generateStars(rating.rating)">
-                        <i class="bi" [ngClass]="star === 'filled' ? 'bi-star-fill' : 'bi-star'"></i>
-                      </ng-container>
-                    </div>
+        <p class="mt-2">Loading testimonials...</p>
+      </div>
+      
+      <!-- Error state -->
+      <div *ngIf="hasError && !loadingRatings" class="text-center text-danger p-4">
+        <i class="bi bi-exclamation-circle fs-4"></i>
+        <p class="mt-2">{{ errorMessage }}</p>
+      </div>
+      
+      <!-- No ratings state -->
+      <div *ngIf="!loadingRatings && !hasError && ratings.length === 0" class="text-center text-muted p-4">
+        <p>No ratings available yet. Be the first to rate us!</p>
+      </div>
+      
+      <!-- Testimonials carousel -->
+      <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" 
+           *ngIf="!loadingRatings && !hasError && ratings.length > 0">
+        <div class="carousel-inner">
+          <ng-container *ngFor="let rating of ratings; let i = index">
+            <div class="carousel-item" [ngClass]="{'active': i === 0}">
+              <div class="card border-0 shadow-sm">
+                <div class="card-body text-center p-3 p-md-4">
+                  <div class="avatar mb-3 mx-auto bg-light rounded-circle d-flex align-items-center justify-content-center" 
+                       [ngStyle]="{'width': innerWidth < 576 ? '60px' : '80px', 'height': innerWidth < 576 ? '60px' : '80px'}">
+                    <span *ngIf="rating.firstname" 
+                          [ngClass]="innerWidth < 576 ? 'fs-5' : 'fs-4'"
+                          style="color: #69BB66;">
+                      {{ rating.firstname.charAt(0) }}{{ rating.lastname ? rating.lastname.charAt(0) : '' }}
+                    </span>
+                    <i *ngIf="!rating.firstname" 
+                       [ngClass]="['bi', 'bi-person', innerWidth < 576 ? 'fs-5' : 'fs-4']" 
+                       style="color: #69BB66;"></i>
+                  </div>
+                  
+                  <p class="testimonial-text">{{ rating.feedback }}</p>
+                  <h5 class="mb-1 fs-6 fs-md-5">{{ rating.firstname }} {{ rating.lastname }}</h5>
+                  <div class="text-warning mb-3">
+                    <ng-container *ngFor="let star of generateStars(rating.rating)">
+                      <i class="bi" [ngClass]="[star === 'filled' ? 'bi-star-fill' : 'bi-star', 
+                                              innerWidth < 576 ? 'fs-6' : 'fs-5']"></i>
+                    </ng-container>
                   </div>
                 </div>
               </div>
-            </ng-container>
-          </div>
-          
-          <button *ngIf="ratings.length > 1" class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button *ngIf="ratings.length > 1" class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
+            </div>
+          </ng-container>
+        </div>
+        
+        <button *ngIf="ratings.length > 1" class="carousel-control-prev custom-carousel-control" type="button" 
+                data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button *ngIf="ratings.length > 1" class="carousel-control-next custom-carousel-control" type="button" 
+                data-bs-target="#testimonialCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="container-fluid py-5 px-3 px-md-5">
+  <div class="row text-center mb-4">
+    <div class="col-12">
+      <h2 class="section-title">{{ content.whyHeader || 'Why Choose Us' }}</h2>
+      <p class="text-muted px-2">{{ content.whySub || 'Discover the benefits of our service' }}</p>
+    </div>
+  </div>
+
+  <div class="row g-4 justify-content-center">
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card border-0 shadow-sm h-100 feature-card">
+        <div class="card-body text-center p-3 p-md-4">
+          <div class="feature-icon mb-3">🧳</div>
+          <h5 class="card-title">{{ content.whyHeader1 || 'Feature 1' }}</h5>
+          <p class="card-text">{{ content.whySub1 || 'Description of feature 1' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card border-0 shadow-sm h-100 feature-card">
+        <div class="card-body text-center p-3 p-md-4">
+          <div class="feature-icon mb-3">🌦️</div>
+          <h5 class="card-title">{{ content.whyHeader2 || 'Feature 2' }}</h5>
+          <p class="card-text">{{ content.whySub2 || 'Description of feature 2' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card border-0 shadow-sm h-100 feature-card">
+        <div class="card-body text-center p-3 p-md-4">
+          <div class="feature-icon mb-3">📝</div>
+          <h5 class="card-title">{{ content.whyHeader3 || 'Feature 3' }}</h5>
+          <p class="card-text">{{ content.whySub3 || 'Description of feature 3' }}</p>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="container py-5">
-    <div class="row text-center mb-4">
-      <div class="col">
-        <h2 class="section-title">{{ content.whyHeader }}</h2>
-        <p class="text-muted">{{ content.whySub }}</p>
+<!-- How It Works Section -->
+<div class="container-fluid py-5 px-3 px-md-5">
+  <div class="row text-center mb-4">
+    <div class="col-12">
+      <h2 class="section-title">{{ content.howHeader || 'How It Works' }}</h2>
+    </div>
+  </div>
+  <div class="row text-center g-4 justify-content-center">
+    <div class="col-6 col-md-3">
+      <div class="p-2 p-md-3 how-it-works-item">
+        <div class="feature-icon mb-2">📍</div>
+        <h6 class="mt-2">{{ content.howSub1 || 'Step 1' }}</h6>
       </div>
     </div>
-
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100">
-          <div class="card-body text-center">
-            <div class="feature-icon mb-3">🧳</div>
-            <h5 class="card-title">{{ content.whyHeader1 }}</h5>
-            <p class="card-text">{{ content.whySub1 }}</p>
-          </div>
-        </div>
+    <div class="col-6 col-md-3">
+      <div class="p-2 p-md-3 how-it-works-item">
+        <div class="feature-icon mb-2">📆</div>
+        <h6 class="mt-2">{{ content.howSub2 || 'Step 2' }}</h6>
       </div>
-
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100">
-          <div class="card-body text-center">
-            <div class="feature-icon mb-3">🌦️</div>
-            <h5 class="card-title">{{ content.whyHeader2 }}</h5>
-            <p class="card-text">{{ content.whySub2 }}</p>
-          </div>
-        </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="p-2 p-md-3 how-it-works-item">
+        <div class="feature-icon mb-2">🏞️</div>
+        <h6 class="mt-2">{{ content.howSub3 || 'Step 3' }}</h6>
       </div>
-
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100">
-          <div class="card-body text-center">
-            <div class="feature-icon mb-3">📝</div>
-            <h5 class="card-title">{{ content.whyHeader3 }}</h5>
-            <p class="card-text">{{ content.whySub3 }}</p>
-          </div>
-        </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="p-2 p-md-3 how-it-works-item">
+        <div class="feature-icon mb-2">✅</div>
+        <h6 class="mt-2">{{ content.howSub4 || 'Step 4' }}</h6>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="container py-5">
-    <div class="row text-center mb-4">
-      <div class="col">
-        <h2 class="section-title">{{ content.howHeader }}</h2>
-      </div>
-    </div>
-    <div class="row text-center">
-      <div class="col-md-3">
-        <div class="p-3">
-          <div class="feature-icon mb-2">📍</div>
-          <h6>{{ content.howSub1 }}</h6>
+<!-- Subscribe Section -->
+<div class="container-fluid py-4 py-md-5 bg-light rounded-3 mx-0 px-3 px-md-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-6 text-center">
+      <h3 class="mb-3 subscribe-heading">{{ content.tipHeader || 'Subscribe to Our Newsletter' }}</h3>
+      <p class="text-muted mb-4 px-2">{{ content.subscribe || 'Get travel tips delivered to your inbox' }}</p>
+      <form class="row g-2 justify-content-center" (ngSubmit)="subscribe()" #subscribeForm="ngForm">
+        <div class="col-8 col-md-7 col-lg-8">
+          <input type="email" [(ngModel)]="email" name="email" class="form-control" 
+                 placeholder="Your email address" required aria-label="Email address">
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="p-3">
-          <div class="feature-icon mb-2">📆</div>
-          <h6>{{ content.howSub2 }}</h6>
+        <div class="col-4 col-md-5 col-lg-4">
+          <button type="submit" class="btn btn-dark-green w-100 text-nowrap">Subscribe</button>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="p-3">
-          <div class="feature-icon mb-2">🏞️</div>
-          <h6>{{ content.howSub3 }}</h6>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="p-3">
-          <div class="feature-icon mb-2">✅</div>
-          <h6>{{ content.howSub4 }}</h6>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
-  <div class="container py-5 bg-light rounded">
-    <div class="row justify-content-center">
-      <div class="col-lg-6 text-center">
-        <h3 class="mb-3">{{ content.tipHeader }}</h3>
-        <p class="text-muted mb-4">{{ content.subscribe }}</p>
-        <form class="row g-2" (ngSubmit)="subscribe()" #subscribeForm="ngForm">
-          <div class="col-8">
-            <input type="email" [(ngModel)]="email" name="email" class="form-control" placeholder="Your email address" required>
-          </div>
-          <div class="col-4">
-            <button type="submit" class="btn btn-dark-green w-100">Subscribe</button>
-          </div>
-        </form>
+</div>
 
-      </div>
+<!-- Success Toast -->
+<div *ngIf="showAlert" class="custom-toast alert-success shadow" role="alert">
+  <div class="d-flex align-items-center">
+    <span class="me-2 fs-4">🎉</span>
+    <div class="flex-grow-1">
+      <strong>Subscribed!</strong> You've joined the PackPal newsletter.
     </div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="showAlert = false"></button>
   </div>
-    <div
-    *ngIf="showAlert"
-    class="custom-toast alert-success shadow"
-    role="alert" >
-    <div class="d-flex align-items-center">
-      <span class="me-2 fs-4">🎉</span>
-      <div class="flex-grow-1">
-        <strong>Subscribed!</strong> You've joined the PackPal newsletter.
-      </div>
-      <button type="button" class="btn-close" aria-label="Close" (click)="showAlert = false"></button>
-    </div>
-  </div>
+</div>

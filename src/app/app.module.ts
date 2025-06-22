@@ -15,6 +15,7 @@ import { GenerateComponent } from './generate/generate.component';
 import { TipsComponent } from './tips/tips.component';
 import { ContactComponent } from './contact/contact.component';
 import { RatingComponent } from './rating/rating.component';
+import { SafePipe } from './shared/safe.pipe';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { RatingComponent } from './rating/rating.component';
     GenerateComponent,
     TipsComponent,
     ContactComponent,
-    RatingComponent
+    RatingComponent,
+    SafePipe
   ],
   imports: [
     BrowserModule,

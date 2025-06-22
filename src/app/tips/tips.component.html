@@ -1,105 +1,154 @@
+<!-- Fixed header spacing issue with an anchor that adjusts for header height -->
+<div id="tips-top" class="header-offset"></div>
+
 <section class="tips-section">
-    <div class="container">
-      <div class="text-center mb-5">
-        <h2 class="fw-bold">{{content.title}}</h2>
-        <p class="text-muted">{{content.subtitle}}</p>
-      </div>
-
-      <div class="row g-4">
-        <div class="col-md-6 col-lg-4">
-          <div class="card tip-card h-100" data-bs-toggle="modal" data-bs-target="#rollDontFoldModal" style="cursor: pointer;">
-            <div class="card-body">
-              <h5 class="card-title">{{content.tipTitle1}}</h5>
-              <p class="card-text">{{content.tipSubtitle1}}</p>
-              <span class="click-more mt-auto">Click to learn more →</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-          <div class="card tip-card h-100" data-bs-toggle="modal" data-bs-target="#packingCubesModal" style="cursor: pointer;">
-            <div class="card-body">
-              <h5 class="card-title">{{content.tipTitle2}}</h5>
-              <p class="card-text">{{content.tipSubtitle2}}</p>
-              <span class="click-more mt-auto">Click to learn more →</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-          <div class="card tip-card h-100" data-bs-toggle="modal" data-bs-target="#packByOutfitModal" style="cursor: pointer;">
-            <div class="card-body">
-              <h5 class="card-title">{{content.tipTitle3}}</h5>
-              <p class="card-text">{{content.tipSubtitle3}}</p>
-              <span class="click-more mt-auto">Click to learn more →</span>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="container h-100 d-flex flex-column">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">{{content.title || 'Packing Tips'}}</h2>
+      <p class="text-muted">{{content.subtitle || 'Make your travel packing easier with these helpful tips.'}}</p>
     </div>
-  </section>
 
-  <div class="modal fade" id="rollDontFoldModal" tabindex="-1" aria-labelledby="rollDontFoldModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="rollDontFoldModalLabel">{{content.tipTitle1}}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <img *ngIf="images.tip1" [src]="images.tip1" class="modal-tip-img mb-3" alt="Rolling clothes">
-          <p [innerHTML]="content.innerText1"></p>
-
-        
-          <div class="alert alert-info mt-3">
-            <strong>Pro Tip:</strong> {{content.protip1}}
+    <div class="row g-3 g-md-4 flex-grow-1">
+      <!-- Tip Card 1 -->
+      <div class="col-12 col-sm-6 col-lg-4 mb-3">
+        <div class="card tip-card h-100" data-bs-toggle="modal" data-bs-target="#rollDontFoldModal" style="cursor: pointer;">
+          <div class="card-body">
+            <h5 class="card-title">{{content.tipTitle1 || 'Roll, Don\'t Fold'}}</h5>
+            <p class="card-text">{{content.tipSubtitle1 || 'Save space and reduce wrinkles by rolling your clothes instead of folding them.'}}</p>
+            <span class="click-more mt-auto">Click to learn more →</span>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-dark-green" data-bs-dismiss="modal">Got it!</button>
+      </div>
+
+      <!-- Tip Card 2 -->
+      <div class="col-12 col-sm-6 col-lg-4 mb-3">
+        <div class="card tip-card h-100" data-bs-toggle="modal" data-bs-target="#packingCubesModal" style="cursor: pointer;">
+          <div class="card-body">
+            <h5 class="card-title">{{content.tipTitle2 || 'Use Packing Cubes'}}</h5>
+            <p class="card-text">{{content.tipSubtitle2 || 'Keep your suitcase organized and maximize space with packing cubes.'}}</p>
+            <span class="click-more mt-auto">Click to learn more →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tip Card 3 -->
+      <div class="col-12 col-sm-6 col-lg-4 mb-3">
+        <div class="card tip-card h-100" data-bs-toggle="modal" data-bs-target="#packByOutfitModal" style="cursor: pointer;">
+          <div class="card-body">
+            <h5 class="card-title">{{content.tipTitle3 || 'Pack by Outfit'}}</h5>
+            <p class="card-text">{{content.tipSubtitle3 || 'Plan your outfits in advance to avoid overpacking.'}}</p>
+            <span class="click-more mt-auto">Click to learn more →</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <div class="modal fade" id="packingCubesModal" tabindex="-1" aria-labelledby="packingCubesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="packingCubesModalLabel">{{content.tipTitle2}}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <img *ngIf="images.tip2" [src]="images.tip2" class="modal-tip-img mb-3" alt="Packing cubes">
-          <p [innerHTML]="content.innerText2"></p>
-          <div class="alert alert-info mt-3">
-            <strong>Pro Tip:</strong> {{content.protip2}}
+<!-- Modal for Tip 1 -->
+<div class="modal fade" id="rollDontFoldModal" tabindex="-1" aria-labelledby="rollDontFoldModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rollDontFoldModalLabel">{{content.tipTitle1 || 'Roll, Don\'t Fold'}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 mb-3 mb-md-0">
+            <div class="modal-img-container">
+              <img *ngIf="images.tip1" [src]="images.tip1" class="modal-tip-img mb-3" alt="Rolling clothes"
+                   (error)="handleImageError($event, 1)">
+              <div *ngIf="!images.tip1" class="modal-tip-placeholder d-flex align-items-center justify-content-center">
+                <i class="bi bi-image fs-1 text-muted"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="tip-content">
+              <p [innerHTML]="content.innerText1 || 'Rolling your clothes instead of folding them not only saves space in your suitcase but also helps prevent wrinkles. This technique is especially useful for t-shirts, pants, and casual dresses.'"></p>
+              <div class="alert alert-info mt-3">
+                <strong>Pro Tip:</strong> {{content.protip1 || 'Use rubber bands to keep rolled clothes compact and organized.'}}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-dark-green" data-bs-dismiss="modal">Got it!</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark-green" data-bs-dismiss="modal">Got it!</button>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="modal fade" id="packByOutfitModal" tabindex="-1" aria-labelledby="packByOutfitModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="packByOutfitModalLabel">{{content.tipTitle3}}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <img *ngIf="images.tip3" [src]="images.tip3" class="modal-tip-img mb-3" alt="Outfit planning">
-          <p [innerHTML]="content.innerText3"></p>
-          <div class="alert alert-info mt-3">
-            <strong>Pro Tip:</strong> {{content.protip3}}
+<!-- Modal for Tip 2 -->
+<div class="modal fade" id="packingCubesModal" tabindex="-1" aria-labelledby="packingCubesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="packingCubesModalLabel">{{content.tipTitle2 || 'Use Packing Cubes'}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 mb-3 mb-md-0">
+            <div class="modal-img-container">
+              <img *ngIf="images.tip2" [src]="images.tip2" class="modal-tip-img mb-3" alt="Packing cubes"
+                   (error)="handleImageError($event, 2)">
+              <div *ngIf="!images.tip2" class="modal-tip-placeholder d-flex align-items-center justify-content-center">
+                <i class="bi bi-image fs-1 text-muted"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="tip-content">
+              <p [innerHTML]="content.innerText2 || 'Packing cubes are a game-changer for organized travel. They compartmentalize your clothing and accessories, making it easy to find what you need without unpacking your entire suitcase.'"></p>
+              <div class="alert alert-info mt-3">
+                <strong>Pro Tip:</strong> {{content.protip2 || 'Color-code your packing cubes by category or by family member when traveling together.'}}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-dark-green" data-bs-dismiss="modal">Got it!</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark-green" data-bs-dismiss="modal">Got it!</button>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Modal for Tip 3 -->
+<div class="modal fade" id="packByOutfitModal" tabindex="-1" aria-labelledby="packByOutfitModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="packByOutfitModalLabel">{{content.tipTitle3 || 'Pack by Outfit'}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 mb-3 mb-md-0">
+            <div class="modal-img-container">
+              <img *ngIf="images.tip3" [src]="images.tip3" class="modal-tip-img mb-3" alt="Outfit planning"
+                   (error)="handleImageError($event, 3)">
+              <div *ngIf="!images.tip3" class="modal-tip-placeholder d-flex align-items-center justify-content-center">
+                <i class="bi bi-image fs-1 text-muted"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="tip-content">
+              <p [innerHTML]="content.innerText3 || 'Plan your outfits day by day for your trip. This prevents overpacking and ensures you have appropriate attire for each activity. Take photos of complete outfits to remember your combinations.'"></p>
+              <div class="alert alert-info mt-3">
+                <strong>Pro Tip:</strong> {{content.protip3 || 'Choose a color scheme for your travel wardrobe so items can be mixed and matched easily.'}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark-green" data-bs-dismiss="modal">Got it!</button>
+      </div>
+    </div>
+  </div>
+</div>
