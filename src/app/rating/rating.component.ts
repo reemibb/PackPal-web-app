@@ -66,7 +66,7 @@ export class RatingComponent implements OnInit, OnDestroy {
           this.isSubmitting = false;
           this.ratingSubmitted = true;
           
-          // Reset form fields
+          
           this.selectedRating = 0;
           this.feedback = '';
         },

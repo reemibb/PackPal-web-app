@@ -1,0 +1,26 @@
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.card-status-indicator {
+  height: 5px;
+  width: 100%;
+}
+
+.card-status-indicator.upcoming {
+  background-color: #ffc107; /* warning */
+}
+
+.card-status-indicator.ongoing {
+  background-color: #198754; /* success */
+}
+
+.card-status-indicator.past {
+  background-color: #6c757d; /* secondary */
+}

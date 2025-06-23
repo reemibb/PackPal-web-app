@@ -36,19 +36,19 @@ export class RegisterComponent {
         if (response.success) {
           this.message = 'Registration successful! Redirecting...';
           
-          // Store user data immediately, just like in login
+        
           if (response.user && response.user.id) {
-            // Make sure to store as a string, just like in login component
+            
             localStorage.setItem('user_id', response.user.id);
             console.log('User ID stored in localStorage:', response.user.id);
             
-            // Also store first name for immediate use
+          
             localStorage.setItem('user_firstname', response.user.firstname || '');
           } else {
             console.warn('User ID not found in response:', response);
           }
           
-          // Navigate immediately, just like in login component
+          
           this.router.navigate(['/home'])
             .then(() => console.log('Navigation successful'))
             .catch(err => console.error('Navigation error:', err));

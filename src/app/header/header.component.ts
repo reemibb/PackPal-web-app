@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   logoUrl: string = '';
-  content: any = { title: 'Home' }; // Default title in case API fails
+  content: any = { title: 'Home' }; 
   userName: string = '';
   isScrolled: boolean = false;
   isMobileView: boolean = false;
@@ -51,7 +51,7 @@ export class HeaderComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to load logo', err);
-        this.logoUrl = ''; // Clear URL on error to show placeholder
+        this.logoUrl = ''; 
       }
     });
   }
@@ -64,7 +64,7 @@ export class HeaderComponent implements OnInit {
         next: res => this.userName = res?.firstname || 'User',
         error: err => {
           console.error('Failed to fetch user name', err);
-          this.userName = 'User'; // Fallback name
+          this.userName = 'User'; 
         }
       });
     }
@@ -85,15 +85,15 @@ export class HeaderComponent implements OnInit {
 
   onImageError(event: any): void {
     console.error('Image failed to load:', this.logoUrl);
-    this.logoUrl = ''; // Clear URL on error to show placeholder
-    event.target.style.display = 'none'; // Hide the broken image
+    this.logoUrl = ''; 
+    event.target.style.display = 'none'; 
   }
   
   logout(): void {
     localStorage.removeItem('user_id');
     localStorage.clear(); 
     
-    // Close the mobile nav if open
+    
     const navbarCollapse = document.getElementById('navbarNav');
     if (navbarCollapse?.classList.contains('show')) {
       const navbarToggler = document.querySelector('.navbar-toggler') as HTMLElement;

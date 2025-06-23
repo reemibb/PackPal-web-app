@@ -3,7 +3,6 @@
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
-<!-- Hero Section -->
 <div class="hero d-flex align-items-center">
   <div class="hero-overlay"></div>
   <div class="container-fluid container-md hero-content text-center px-4">
@@ -13,15 +12,14 @@
           <img *ngIf="images.pack" [src]="images.pack" alt="Pack Icon" class="hero-image img-fluid rounded shadow">
           <div *ngIf="!images.pack" class="hero-image-placeholder rounded shadow"></div>
         </div>
-        <h1 class="display-4 fw-bold hero-title">{{ content.title || 'Welcome to Our Platform' }}</h1>
-        <p class="lead hero-subtitle">{{ content.subtitle || 'Your journey begins here' }}</p>
+        <h1 class="display-4 fw-bold hero-title">{{ content.title }}</h1>
+        <p class="lead hero-subtitle">{{ content.subtitle }}</p>
         <a routerLink="/home/generate" class="btn btn-dark-green btn-lg mt-3 px-4 py-2 rounded-pill">Get Started</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Testimonials Section -->
 <div class="container-fluid py-5 bg-white px-3 px-md-5">
   <div class="row text-center mb-4">
     <div class="col-12">
@@ -30,26 +28,24 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-8">
-      <!-- Loading state -->
+    
       <div *ngIf="loadingRatings" class="text-center p-4">
         <div class="spinner-border text-success" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
-        <p class="mt-2">Loading testimonials...</p>
+        <p class="mt-2">Loading...</p>
       </div>
       
-      <!-- Error state -->
       <div *ngIf="hasError && !loadingRatings" class="text-center text-danger p-4">
         <i class="bi bi-exclamation-circle fs-4"></i>
         <p class="mt-2">{{ errorMessage }}</p>
       </div>
       
-      <!-- No ratings state -->
       <div *ngIf="!loadingRatings && !hasError && ratings.length === 0" class="text-center text-muted p-4">
         <p>No ratings available yet. Be the first to rate us!</p>
       </div>
       
-      <!-- Testimonials carousel -->
+    
       <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" 
            *ngIf="!loadingRatings && !hasError && ratings.length > 0">
         <div class="carousel-inner">
@@ -98,12 +94,11 @@
   </div>
 </div>
 
-<!-- Features Section -->
 <div class="container-fluid py-5 px-3 px-md-5">
   <div class="row text-center mb-4">
     <div class="col-12">
-      <h2 class="section-title">{{ content.whyHeader || 'Why Choose Us' }}</h2>
-      <p class="text-muted px-2">{{ content.whySub || 'Discover the benefits of our service' }}</p>
+      <h2 class="section-title">{{ content.whyHeader}}</h2>
+      <p class="text-muted px-2">{{ content.whySub }}</p>
     </div>
   </div>
 
@@ -112,8 +107,8 @@
       <div class="card border-0 shadow-sm h-100 feature-card">
         <div class="card-body text-center p-3 p-md-4">
           <div class="feature-icon mb-3">🧳</div>
-          <h5 class="card-title">{{ content.whyHeader1 || 'Feature 1' }}</h5>
-          <p class="card-text">{{ content.whySub1 || 'Description of feature 1' }}</p>
+          <h5 class="card-title">{{ content.whyHeader1 }}</h5>
+          <p class="card-text">{{ content.whySub1 }}</p>
         </div>
       </div>
     </div>
@@ -122,8 +117,8 @@
       <div class="card border-0 shadow-sm h-100 feature-card">
         <div class="card-body text-center p-3 p-md-4">
           <div class="feature-icon mb-3">🌦️</div>
-          <h5 class="card-title">{{ content.whyHeader2 || 'Feature 2' }}</h5>
-          <p class="card-text">{{ content.whySub2 || 'Description of feature 2' }}</p>
+          <h5 class="card-title">{{ content.whyHeader2 }}</h5>
+          <p class="card-text">{{ content.whySub2 }}</p>
         </div>
       </div>
     </div>
@@ -132,55 +127,55 @@
       <div class="card border-0 shadow-sm h-100 feature-card">
         <div class="card-body text-center p-3 p-md-4">
           <div class="feature-icon mb-3">📝</div>
-          <h5 class="card-title">{{ content.whyHeader3 || 'Feature 3' }}</h5>
-          <p class="card-text">{{ content.whySub3 || 'Description of feature 3' }}</p>
+          <h5 class="card-title">{{ content.whyHeader3 }}</h5>
+          <p class="card-text">{{ content.whySub3 }}</p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- How It Works Section -->
+
 <div class="container-fluid py-5 px-3 px-md-5">
   <div class="row text-center mb-4">
     <div class="col-12">
-      <h2 class="section-title">{{ content.howHeader || 'How It Works' }}</h2>
+      <h2 class="section-title">{{ content.howHeader}}</h2>
     </div>
   </div>
   <div class="row text-center g-4 justify-content-center">
     <div class="col-6 col-md-3">
       <div class="p-2 p-md-3 how-it-works-item">
         <div class="feature-icon mb-2">📍</div>
-        <h6 class="mt-2">{{ content.howSub1 || 'Step 1' }}</h6>
+        <h6 class="mt-2">{{ content.howSub1}}</h6>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="p-2 p-md-3 how-it-works-item">
         <div class="feature-icon mb-2">📆</div>
-        <h6 class="mt-2">{{ content.howSub2 || 'Step 2' }}</h6>
+        <h6 class="mt-2">{{ content.howSub2 }}</h6>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="p-2 p-md-3 how-it-works-item">
         <div class="feature-icon mb-2">🏞️</div>
-        <h6 class="mt-2">{{ content.howSub3 || 'Step 3' }}</h6>
+        <h6 class="mt-2">{{ content.howSub3 }}</h6>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="p-2 p-md-3 how-it-works-item">
         <div class="feature-icon mb-2">✅</div>
-        <h6 class="mt-2">{{ content.howSub4 || 'Step 4' }}</h6>
+        <h6 class="mt-2">{{ content.howSub4 }}</h6>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Subscribe Section -->
+
 <div class="container-fluid py-4 py-md-5 bg-light rounded-3 mx-0 px-3 px-md-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-6 text-center">
-      <h3 class="mb-3 subscribe-heading">{{ content.tipHeader || 'Subscribe to Our Newsletter' }}</h3>
-      <p class="text-muted mb-4 px-2">{{ content.subscribe || 'Get travel tips delivered to your inbox' }}</p>
+      <h3 class="mb-3 subscribe-heading">{{ content.tipHeader }}</h3>
+      <p class="text-muted mb-4 px-2">{{ content.subscribe }}</p>
       <form class="row g-2 justify-content-center" (ngSubmit)="subscribe()" #subscribeForm="ngForm">
         <div class="col-8 col-md-7 col-lg-8">
           <input type="email" [(ngModel)]="email" name="email" class="form-control" 
@@ -194,7 +189,7 @@
   </div>
 </div>
 
-<!-- Success Toast -->
+
 <div *ngIf="showAlert" class="custom-toast alert-success shadow" role="alert">
   <div class="d-flex align-items-center">
     <span class="me-2 fs-4">🎉</span>

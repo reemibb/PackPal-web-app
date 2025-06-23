@@ -1,0 +1,113 @@
+<div class="container py-4 mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">{{ isEditMode ? 'Edit Trip' : 'Create New Trip' }}</h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="loading" class="text-center py-3">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          
+          <div *ngIf="error" class="alert alert-danger">
+            {{ error }}
+          </div>
+          
+          <form *ngIf="!loading && !error" [formGroup]="tripForm" (ngSubmit)="saveTrip()">
+            <div class="mb-3">
+              <label for="title" class="form-label">Trip Title <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                id="title" 
+                class="form-control" 
+                placeholder="e.g., Summer Vacation in Paris"
+                formControlName="title"
+                [class.is-invalid]="tripForm.get('title')?.invalid && tripForm.get('title')?.touched"
+              >
+              <div class="invalid-feedback">
+                <span *ngIf="tripForm.get('title')?.errors?.['required']">
+                  Trip title is required.
+                </span>
+                <span *ngIf="tripForm.get('title')?.errors?.['minlength']">
+                  Trip title must be at least 3 characters.
+                </span>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="destination" class="form-label">Destination <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                id="destination" 
+                class="form-control" 
+                placeholder="e.g., Paris, France"
+                formControlName="destination"
+                [class.is-invalid]="tripForm.get('destination')?.invalid && tripForm.get('destination')?.touched"
+              >
+              <div class="invalid-feedback">
+                Destination is required.
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="startDate" class="form-label">Start Date <span class="text-danger">*</span></label>
+                <input 
+                  type="date" 
+                  id="startDate" 
+                  class="form-control" 
+                  formControlName="startDate"
+                  [min]="minDate"
+                  [class.is-invalid]="(tripForm.get('startDate')?.invalid && tripForm.get('startDate')?.touched) || 
+                                      tripForm.errors?.['dateRange']"
+                >
+                <div class="invalid-feedback">
+                  <span *ngIf="tripForm.get('startDate')?.errors?.['required']">
+                    Start date is required.
+                  </span>
+                  <span *ngIf="tripForm.errors?.['dateRange']">
+                    Start date must be before end date.
+                  </span>
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="endDate" class="form-label">End Date <span class="text-danger">*</span></label>
+                <input 
+                  type="date" 
+                  id="endDate" 
+                  class="form-control" 
+                  formControlName="endDate"
+                  [min]="tripForm.get('startDate')?.value"
+                  [class.is-invalid]="(tripForm.get('endDate')?.invalid && tripForm.get('endDate')?.touched) || 
+                                      tripForm.errors?.['dateRange']"
+                >
+                <div class="invalid-feedback">
+                  <span *ngIf="tripForm.get('endDate')?.errors?.['required']">
+                    End date is required.
+                  </span>
+                  <span *ngIf="tripForm.errors?.['dateRange']">
+                    End date must be after start date.
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+              <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="loading || tripForm.invalid">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                {{ isEditMode ? 'Save Changes' : 'Create Trip' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

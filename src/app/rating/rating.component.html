@@ -6,7 +6,7 @@
           <div class="card-body">
             <h2 class="text-center mb-4 text-success">⭐ Rate Us</h2>
 
-            <!-- Star Rating -->
+        
             <div class="stars-container">
               <ng-container *ngFor="let star of stars; index as i">
                 <i
@@ -21,7 +21,6 @@
               </ng-container>
             </div>
 
-            <!-- Feedback Form -->
             <div class="feedback-container">
               <label for="feedback" class="form-label fw-semibold">Your Feedback</label>
               <textarea
@@ -34,7 +33,7 @@
               ></textarea>
             </div>
 
-            <!-- Submit Button -->
+           
             <div class="button-container">
               <button 
                 class="btn btn-lg position-relative overflow-hidden" 
@@ -53,7 +52,7 @@
               </button>
             </div>
 
-            <!-- Success Message -->
+           
             <div *ngIf="ratingSubmitted" class="success-message">
               <i class="bi bi-check-circle-fill me-2"></i>
               Thank you for your feedback! We appreciate your time.

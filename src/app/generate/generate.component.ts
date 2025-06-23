@@ -3,6 +3,8 @@ import { ConnectService } from '../connect.service';
 import { HttpClient } from '@angular/common/http';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+
 
 declare var bootstrap: any;
 
@@ -13,7 +15,7 @@ declare var bootstrap: any;
   standalone: false,
 })
 export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
-  // Content and selections
+
   content = {
     title: 'Generate Your Packing List',
     types: [] as string[],
@@ -28,14 +30,14 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
   startDate: string = '';
   endDate: string = '';
 
-  // Location and weather
+  
   countries: string[] = [];
   selectedCountry: string = '';
   includeWeather: boolean = false;
   weatherInfo: any = null;
   weatherLoading: boolean = false;
 
-  // UI state
+ 
   modalInstance: any;
   newItem: string = '';
   screenWidth: number = window.innerWidth;
@@ -43,20 +45,20 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
   private inputChange$ = new Subject<string>();
   private subscriptions: Subscription[] = [];
 
-  // Checklist
+ 
   checklistItems: string[] = [];
   packedMap: { [item: string]: boolean } = {};
   lastPackingListId: number = 0;
 
-  // Alerts
+ 
   alertMessage: string = '';
   alertType: 'success' | 'danger' | 'warning' | '' = '';
   
-  // Debug mode
+
   debugMode: boolean = true;
 
-  constructor(private connectService: ConnectService, private http: HttpClient) {
-    // Handle debounced input for custom items
+  constructor(private connectService: ConnectService, private http: HttpClient, private route: ActivatedRoute) {
+    
     this.inputChange$
       .pipe(
         debounceTime(300),
@@ -77,13 +79,25 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadCountries();
     this.fetchUserPackingList();
     
-    // Set default dates
+ 
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     
     this.startDate = this.formatDate(today);
     this.endDate = this.formatDate(tomorrow);
+
+    this.route.queryParams.subscribe(params => {
+    if (params['tripId']) {
+      // We have trip data, let's pre-fill the form
+      this.selectedCountry = params['destination'] || '';
+      this.startDate = params['startDate'] || this.startDate;
+      this.endDate = params['endDate'] || this.endDate;
+      
+      // You might want to automatically select some options based on the destination
+      this.preSelectOptionsBasedOnDestination(params['destination']);
+    }
+  });
   }
   
   ngAfterViewInit() {
@@ -94,24 +108,48 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     
-    // Clean up subscriptions
+  
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
   
-  // HELPER METHOD: This strips emojis and trims whitespace to get just the activity name
   mapActivityName(activity: string): string {
-    // This regex removes emoji characters and trims whitespace
     return activity.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim();
   }
+
+  preSelectOptionsBasedOnDestination(destination: string): void {
+  if (!destination) return;
   
-  // Helper method to show selected activities in debug view
+  // This is a simple example - you might want to implement more sophisticated logic
+  const lowercaseDest = destination.toLowerCase();
+  
+  // Select trip type based on destination keywords
+  if (lowercaseDest.includes('beach') || lowercaseDest.includes('island') || 
+      lowercaseDest.includes('coast') || lowercaseDest.includes('sea')) {
+    this.selectedTripType = 'Beach Vacation';
+  } else if (lowercaseDest.includes('mountain') || lowercaseDest.includes('hiking') || 
+             lowercaseDest.includes('alps') || lowercaseDest.includes('trek')) {
+    this.selectedTripType = 'Mountain Trip';
+  } else if (lowercaseDest.includes('city') || lowercaseDest.includes('urban')) {
+    this.selectedTripType = 'City Exploration';
+  }
+  
+  // You can also pre-select activities based on destination
+  // Just make sure these values exist in your content.activities array
+  if (lowercaseDest.includes('beach')) {
+    this.selectedActivities['Swimming'] = true;
+    this.selectedActivities['Sunbathing'] = true;
+  } else if (lowercaseDest.includes('mountain')) {
+    this.selectedActivities['Hiking'] = true;
+    this.selectedActivities['Photography'] = true;
+  }
+}
+  
   getSelectedActivities(): string {
     return Object.keys(this.selectedActivities)
       .filter(activity => this.selectedActivities[activity])
       .join(', ');
   }
   
-  // Helper methods
   formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
   }
@@ -120,7 +158,6 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
     return Object.values(this.packedMap).filter(Boolean).length;
   }
   
-  // Data loading
   loadGenerateContent() {
     const subscription = this.connectService.getGenerateContent().subscribe({
       next: res => {
@@ -128,7 +165,7 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
           this.content = res.data || this.content;
         } else {
           console.error('Failed to load generate content');
-          // Set fallback content if needed
+          
           this.content = {
             title: 'Generate Your Packing List',
             types: ['Business', 'Leisure', 'Adventure'],
@@ -151,7 +188,7 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
           this.countries = res.data || [];
         } else {
           console.error('Failed to load countries');
-          // Fallback to some common countries
+          
           this.countries = ['USA', 'Canada', 'UK', 'France', 'Germany', 'Japan', 'Australia'];
         }
       },
@@ -173,19 +210,18 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
   const subscription = this.http.get<any>(url).subscribe({
     next: (res) => {
       if (res && res.success && Array.isArray(res.items)) {
-        // Store the ID first so we know which list we're working with
+        
         this.lastPackingListId = res.packing_list_id || 0;
         
-        // Only then set the checklist items
         this.checklistItems = res.items;
 
-        // Reset the packed map before applying the server values
+        
         this.resetPackedStatus();
         
-        // Apply the packed status from the server response
+        
         if (res.packed_status) {
           Object.keys(res.packed_status).forEach((item) => {
-            // Only apply status for items that actually exist in the current list
+            
             if (this.checklistItems.includes(item)) {
               this.packedMap[item] = res.packed_status[item] ?? false;
             }
@@ -207,7 +243,6 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
   this.subscriptions.push(subscription);
 }
   
-  // UI initialization
   initializeModal() {
     const modalElement = document.getElementById('generationModal');
     if (modalElement) {
@@ -218,7 +253,7 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   
-  // Weather handling
+  
   onToggleWeather() {
     if (this.includeWeather && this.selectedCountry) {
       this.fetchWeather(this.selectedCountry);
@@ -252,25 +287,20 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     
-    // Clear the previous list
     this.packingList = [];
     
-    // Get pack preference (default to medium if somehow not set)
     const packPref = this.selectedPack.toLowerCase();
     
-    // Debug: output what we think is selected
     console.log('Trip Type:', this.selectedTripType);
     console.log('Activities Object:', this.selectedActivities);
     console.log('Selected Activities:', Object.keys(this.selectedActivities).filter(k => this.selectedActivities[k] === true));
     console.log('Pack Preference:', packPref);
     
-    // Convert to an array for easier processing
     const selectedActivitiesList = Object.keys(this.selectedActivities)
       .filter(activity => this.selectedActivities[activity] === true);
     
     console.log('Selected Activities List:', selectedActivitiesList);
     
-    // Essential items (always included)
     const essentialItems = [
       '🪥 Toothbrush & Toothpaste',
       '🧴 Shampoo & Conditioner',
@@ -281,10 +311,8 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
       '🧦 Socks & Underwear'
     ];
     
-    // Add essentials first
     this.packingList.push(...essentialItems);
     
-    // ===== TRIP TYPE BASED ITEMS =====
     if (this.selectedTripType === 'Business') {
       this.packingList.push(
         '👔 Formal Shirts/Blouses', 
@@ -292,7 +320,6 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
         '👞 Dress Shoes'
       );
       
-      // Add more items based on packing preference
       if (packPref === 'medium' || packPref === 'heavy') {
         this.packingList.push(
           '💼 Laptop & Charger', 
@@ -356,16 +383,12 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     
-    // ===== ACTIVITY SPECIFIC ITEMS =====
-    // Process each selected activity
     for (const activity of selectedActivitiesList) {
       console.log(`Processing activity: ${activity}`);
       
-      // Use the mapActivityName helper to get the base activity name without emoji
       const activityName = this.mapActivityName(activity);
       console.log(`Mapped activity name: ${activityName}`);
       
-      // Swimming activity
       if (activityName === 'Swimming') {
         console.log('Adding Swimming items');
         
@@ -393,7 +416,6 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
       
-      // Beach activity
       else if (activityName === 'Beach') {
         console.log('Adding Beach items');
         
@@ -420,7 +442,6 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
       
-      // Hiking activity
       else if (activityName === 'Hiking') {
         console.log('Adding Hiking items');
         
@@ -449,7 +470,6 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
       
-      // Photography activity
       else if (activityName === 'Photography') {
         console.log('Adding Photography items');
         
@@ -477,7 +497,6 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
       
-      // Sightseeing activity
       else if (activityName === 'Sightseeing') {
         console.log('Adding Sightseeing items');
         
@@ -505,11 +524,9 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
       
-      // Fall back to activity name contains check for other activities
       else {
         console.log(`No exact match for "${activityName}", checking partial matches`);
-        
-        // Winter Sports
+      
         if (activityName.includes('Ski') || activityName.includes('Snow') || activityName.includes('Winter')) {
           this.packingList.push(
             '🧥 Ski Jacket/Snow Gear',
@@ -520,7 +537,6 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         }
         
-        // Camping
         if (activityName.includes('Camp')) {
           this.packingList.push(
             '🏕️ Tent',
@@ -531,7 +547,7 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         }
         
-        // Business Meetings
+    
         if (activityName.includes('Meeting') || activityName.includes('Conference')) {
           this.packingList.push(
             '👔 Formal Attire',
@@ -544,7 +560,6 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     
-    // ===== PREFERENCE SPECIFIC EXTRAS =====
     if (packPref === 'light') {
       this.packingList.push(
         '🧼 Travel-sized Toiletries',
@@ -569,12 +584,12 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
     
-    // ===== WEATHER-SPECIFIC ITEMS =====
+  
     if (this.includeWeather && this.weatherInfo) {
       const temp = this.weatherInfo.main.temp;
       const weatherDesc = this.weatherInfo.weather[0].description.toLowerCase();
       
-      // Temperature based items
+  
       if (temp < 5) {
         this.packingList.push(
           '🧥 Heavy Winter Coat',
@@ -602,7 +617,7 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
         );
       }
       
-      // Weather condition based items
+      
       if (weatherDesc.includes('rain') || weatherDesc.includes('drizzle')) {
         this.packingList.push(
           '☔ Umbrella',
@@ -625,7 +640,7 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     
-    // ===== TRIP DURATION ADJUSTMENTS =====
+     
     if (this.startDate && this.endDate) {
       const start = new Date(this.startDate);
       const end = new Date(this.endDate);
@@ -645,11 +660,11 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     
-    // Remove duplicates
+    
     this.packingList = [...new Set(this.packingList)];
     console.log('Final packing list has', this.packingList.length, 'items');
     
-    // Open the modal to show the list
+    
     if (this.modalInstance) this.modalInstance.show();
   }
 
@@ -663,7 +678,7 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
   
-  // Modal and item management
+  
   closeModal() {
     if (this.modalInstance) this.modalInstance.hide();
   }
@@ -680,12 +695,12 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
     this.packingList = this.packingList.filter(i => i !== item);
   }
   
-  // Alert handling
+
   showAlert(message: string, type: 'success' | 'danger' | 'warning') {
     this.alertMessage = message;
     this.alertType = type;
     
-    // Auto-hide after 5 seconds
+    
     setTimeout(() => {
       if (this.alertMessage === message) {
         this.closeAlert();
@@ -699,7 +714,7 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   
   onChecklistChange(item: string, checked: boolean) {
-  // Only update if the item is in the current list
+  
   if (!this.checklistItems.includes(item)) {
     console.warn(`Attempted to update item "${item}" that is not in the current list`);
     return;
@@ -777,7 +792,7 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
     return;
   }
   
-  // Filter out empty items
+  
   this.packingList = this.packingList.filter(item => !!item && item.trim() !== '');
   
   const user_id = localStorage.getItem('user_id');
@@ -804,14 +819,14 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
         this.closeModal();
         this.showAlert('List saved successfully!', 'success');
         
-        // Update the checklist with new items
-        this.checklistItems = [...this.packingList]; // Create a fresh copy
+        
+        this.checklistItems = [...this.packingList]; 
         this.lastPackingListId = res.packing_list_id || this.lastPackingListId;
         
-        // IMPORTANT FIX: Reset the packed status for the new list
+        
         this.resetPackedStatus();
         
-        // Generate PDF after brief delay
+      
         setTimeout(() => {
           this.exportAsPDF();
         }, 500);
@@ -828,24 +843,24 @@ export class GenerateComponent implements OnInit, AfterViewInit, OnDestroy {
   this.subscriptions.push(subscription);
 }
 
-// Add this helper method to reset the packed status for newly created lists
+
 resetPackedStatus() {
-  // Create a new packed map instead of modifying the existing one
+  
   const newPackedMap: { [item: string]: boolean } = {};
   
-  // Initialize all items as not packed
+  
   this.checklistItems.forEach(item => {
     newPackedMap[item] = false;
   });
   
-  // Replace the old packed map with the new one
+  
   this.packedMap = newPackedMap;
   
   console.log('Packed status reset for new list with', this.checklistItems.length, 'items');
 }
   
   exportAsPDF() {
-    // Create a container for the content
+    
     const tempDiv = document.createElement('div');
     tempDiv.style.padding = '20px';
     tempDiv.style.fontFamily = 'Arial, sans-serif';
@@ -854,7 +869,7 @@ resetPackedStatus() {
     tempDiv.style.maxWidth = '800px';
     tempDiv.style.margin = '0 auto';
     
-    // Header content
+    
     let htmlContent = `
       <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #14532d; padding-bottom: 15px;">
         <h1 style="color: #14532d; margin-bottom: 10px; font-size: 28px;">Packing List for ${this.selectedCountry}</h1>
@@ -868,7 +883,7 @@ resetPackedStatus() {
       </div>
     `;
 
-    // Weather information if available
+    
     if (this.weatherInfo) {
       htmlContent += `
         <div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196f3;">
@@ -885,7 +900,7 @@ resetPackedStatus() {
       `;
     }
 
-    // Packing items list
+    
     htmlContent += `
       <div style="margin-bottom: 20px;">
         <h3 style="color: #14532d; margin-bottom: 15px; font-size: 18px;">📦 Your Packing Items</h3>
@@ -923,7 +938,7 @@ resetPackedStatus() {
     tempDiv.innerHTML = htmlContent;
     document.body.appendChild(tempDiv);
 
-    // Configuration for PDF generation
+    
     const opt = {
       margin: 10,
       filename: `PackingList-${this.selectedCountry}-${this.formatDate(new Date())}.pdf`,
@@ -958,9 +973,9 @@ resetPackedStatus() {
     }
   }
   
-  // Print functionality
+  
   printChecklist() {
-    // Create a new window for printing
+    
     const printWindow = window.open('', '_blank');
     
     if (!printWindow) {
@@ -968,15 +983,15 @@ resetPackedStatus() {
       return;
     }
     
-    // Get the current date in a readable format
+    
     const currentDate = new Date().toLocaleDateString();
     
-    // Calculate total and packed items
+    
     const totalItems = this.checklistItems.length;
     const packedItems = this.checklistItems.filter(item => this.packedMap[item]).length;
     const percentPacked = totalItems > 0 ? Math.round((packedItems / totalItems) * 100) : 0;
     
-    // Create the HTML content for the print window
+    
     let printContent = `
       <!DOCTYPE html>
       <html>
@@ -1102,7 +1117,7 @@ resetPackedStatus() {
           <tbody>
     `;
     
-    // Add each checklist item
+    
     this.checklistItems.forEach(item => {
       const isPacked = this.packedMap[item] || false;
       printContent += `
@@ -1116,7 +1131,7 @@ resetPackedStatus() {
       `;
     });
     
-    // Close the table and add footer
+    
     printContent += `
           </tbody>
         </table>
@@ -1127,7 +1142,7 @@ resetPackedStatus() {
         </div>
         
         <script>
-          // Auto-trigger print dialog when page loads
+          
           window.onload = function() {
             setTimeout(function() {
               window.print();
@@ -1138,7 +1153,7 @@ resetPackedStatus() {
       </html>
     `;
     
-    // Write the content to the new window and close the document stream
+    
     printWindow.document.open();
     printWindow.document.write(printContent);
     printWindow.document.close();

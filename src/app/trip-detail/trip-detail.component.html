@@ -1,0 +1,224 @@
+<div class="container py-4 mt-5">
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="trip && !loading" class="trip-detail">
+    <!-- Trip header -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+          <div>
+            <div class="d-flex align-items-center">
+              <button class="btn btn-sm btn-outline-secondary me-3" (click)="goBack()">
+                <i class="bi bi-arrow-left"></i> Back
+              </button>
+              <h2 class="mb-0">{{ trip.title }}</h2>
+            </div>
+            <div class="mt-2">
+              <span class="badge bg-info me-2">{{ trip.destination }}</span>
+              <span class="text-muted">
+                {{ trip.startDate | date:'MMM d' }} - {{ trip.endDate | date:'MMM d, yyyy' }}
+                ({{ tripDays.length }} days)
+              </span>
+            </div>
+          </div>
+          <div class="mt-3 mt-md-0">
+            <button class="btn btn-outline-primary" (click)="editTrip()">
+              <i class="bi bi-pencil me-1"></i> Edit Trip
+            </button>
+          </div>
+        </div>
+        
+        <div class="progress mb-2" style="height: 10px;">
+          <div class="progress-bar bg-success" role="progressbar" 
+               [style.width]="getCompletedPercent() + '%'"
+               [attr.aria-valuenow]="getCompletedPercent()" 
+               aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="text-end">
+          <small class="text-muted">
+            {{ getCompletedActivities() }} of {{ trip.itinerary.length || 0 }} activities completed
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Days navigation -->
+    <div class="days-nav mb-4 overflow-auto">
+      <div class="d-flex">
+        <div *ngFor="let day of tripDays" class="day-pill"
+             [class.active]="selectedDay && day.getTime() === selectedDay.getTime()"
+             [class.past]="isDayBeforeToday(day)"
+             [class.today]="isDayToday(day)"
+             (click)="selectDay(day)">
+          <div class="day-name">{{ day | date:'EEE' }}</div>
+          <div class="day-date">{{ day | date:'MMM d' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Daily Activities -->
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h5 class="mb-0">
+              Activities for {{ selectedDay | date:'EEEE, MMMM d, yyyy' }}
+            </h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="dayActivities.length === 0" class="text-center py-4">
+              <p class="text-muted">No activities planned for this day</p>
+              <button class="btn btn-outline-primary" (click)="activityForm.reset()">
+                Add Your First Activity
+              </button>
+            </div>
+
+            <div *ngIf="dayActivities.length > 0" class="timeline">
+              <div *ngFor="let item of dayActivities" class="timeline-item"
+                   [class.completed]="item.completed">
+                <div class="timeline-badge">
+                  <i class="bi bi-clock"></i>
+                </div>
+                <div class="timeline-panel card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <h5 class="card-title mb-2">
+                        {{ formatTime(item.time) }} - {{ item.activity }}
+                      </h5>
+                      <div>
+                        <button class="btn btn-sm btn-outline-primary me-1" (click)="editActivity(item)">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger me-1" (click)="deleteActivity(item.id)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                        <button class="btn btn-sm" [class.btn-success]="item.completed" 
+                                [class.btn-outline-secondary]="!item.completed"
+                                (click)="toggleComplete(item)">
+                          <i class="bi" [class.bi-check-circle-fill]="item.completed" 
+                             [class.bi-circle]="!item.completed"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <p *ngIf="item.location" class="card-subtitle mb-2">
+                      <i class="bi bi-geo-alt text-danger"></i> {{ item.location }}
+                    </p>
+                    <p *ngIf="item.notes" class="card-text">{{ item.notes }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Form -->
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h5 class="mb-0">{{ isEditing ? 'Edit Activity' : 'Add Activity' }}</h5>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="activityForm" (ngSubmit)="isEditing ? updateActivity() : addActivity()">
+              <div class="mb-3">
+                <label for="time" class="form-label">Time <span class="text-danger">*</span></label>
+                <input 
+                  type="time" 
+                  id="time" 
+                  class="form-control" 
+                  formControlName="time"
+                  [class.is-invalid]="activityForm.get('time')?.invalid && activityForm.get('time')?.touched"
+                >
+                <div class="invalid-feedback">
+                  Time is required.
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="activity" class="form-label">Activity <span class="text-danger">*</span></label>
+                <input 
+                  type="text" 
+                  id="activity" 
+                  class="form-control" 
+                  placeholder="e.g., Visit Eiffel Tower"
+                  formControlName="activity"
+                  [class.is-invalid]="activityForm.get('activity')?.invalid && activityForm.get('activity')?.touched"
+                >
+                <div class="invalid-feedback">
+                  Activity description is required.
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input 
+                  type="text" 
+                  id="location" 
+                  class="form-control" 
+                  placeholder="e.g., Champ de Mars, Paris"
+                  formControlName="location"
+                >
+              </div>
+              
+              <div class="mb-3">
+                <label for="notes" class="form-label">Notes</label>
+                <textarea 
+                  id="notes" 
+                  class="form-control" 
+                  rows="3" 
+                  placeholder="e.g., Book tickets online to skip the line"
+                  formControlName="notes"
+                ></textarea>
+              </div>
+              
+              <div class="d-grid gap-2">
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="activityForm.invalid"
+                >
+                  {{ isEditing ? 'Update Activity' : 'Add Activity' }}
+                </button>
+                <button 
+                  *ngIf="isEditing" 
+                  type="button" 
+                  class="btn btn-outline-secondary" 
+                  (click)="cancelEdit()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add this below the existing content in trip-detail.component.html -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Packing List for this Trip</h5>
+        <button class="btn btn-sm btn-primary" (click)="createPackingList()">
+          <i class="bi bi-backpack me-1"></i> Create Packing List
+        </button>
+      </div>
+      <div class="card-body">
+        <p class="text-muted">
+          <i class="bi bi-info-circle me-2"></i>
+          Generate a customized packing list for your trip to {{ trip?.destination }}.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

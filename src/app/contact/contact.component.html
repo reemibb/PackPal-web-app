@@ -1,37 +1,37 @@
 <section class="contact-section">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="fw-bold">{{content.title || 'Contact Us'}}</h2>
-      <p class="text-muted">{{content.subtitle || 'We\'d love to hear from you. Send us a message!'}}</p>
+      <h2 class="fw-bold">{{content.title}}</h2>
+      <p class="text-muted">{{content.subtitle}}</p>
     </div>
 
     <div class="row g-4">
-      <!-- Contact Information -->
+   
       <div class="col-lg-5 mb-4 mb-lg-0">
         <div class="contact-info">
           <h5>📍 Address</h5>
-          <p>{{content.address || '123 PackPal Street, Packcity, PC 12345'}}</p>
+          <p>{{content.address}}</p>
 
           <h5>📞 Phone</h5>
           <p>
-            <a href="tel:{{content.phone || '+1 (555) 123-4567'}}" class="contact-link">
-              {{content.phone || '+1 (555) 123-4567'}}
+            <a href="tel:{{content.phone }}" class="contact-link">
+              {{content.phone }}
             </a>
           </p>
 
           <h5>✉️ Email</h5>
           <p>
-            <a href="mailto:{{content.email || 'info@packpal.com'}}" class="contact-link">
-              {{content.email || 'info@packpal.com'}}
+            <a href="mailto:{{content.email}}" class="contact-link">
+              {{content.email }}
             </a>
           </p>
 
           <h5>🕒 Hours</h5>
-          <p>{{content.hours || 'Monday - Friday: 9 AM - 5 PM'}}</p>
+          <p>{{content.hours }}</p>
         </div>
       </div>
 
-      <!-- Contact Form -->
+      
       <div class="col-lg-7">
         <form (ngSubmit)="submitMessage()" #contactForm="ngForm" novalidate>
           <div class="row g-3">
@@ -64,7 +64,7 @@
       </div>
     </div>
     
-    <!-- Map Section -->
+    
     <div class="row mt-5">
       <div class="col-12">
         <div class="map-container">
@@ -75,7 +75,7 @@
   </div>
 </section>
 
-<!-- Toast Notification -->
+
 <div class="toast-container position-fixed" [ngClass]="{'top-0 end-0 p-3': !isMobile, 'bottom-0 start-50 translate-middle-x p-2': isMobile}" 
      style="z-index: 9999;" *ngIf="toastMessage !== null">
   <div class="toast align-items-center text-white border-0 show fade" 

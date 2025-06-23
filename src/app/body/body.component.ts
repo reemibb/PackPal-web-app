@@ -11,7 +11,7 @@ import { catchError, finalize } from 'rxjs/operators';
   styleUrls: ['./body.component.css']
 })
 export class BodyComponent implements OnInit, OnDestroy {
-  // Default values for when API calls fail
+
   images: any = {
     pack: ''
   };
@@ -71,19 +71,17 @@ export class BodyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Clean up subscriptions to prevent memory leaks
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   loadInitialData() {
-    // Show loading state for ratings
+
     this.loadingRatings = true;
     
-    // Create a subscription for images
     const imagesSub = this.connectService.getBodyImages().pipe(
       catchError(error => {
         console.error('Failed to load images:', error);
-        return of(this.images); // Return default values on error
+        return of(this.images); 
       })
     ).subscribe(res => {
       if (res && Object.keys(res).length > 0) {
@@ -91,20 +89,19 @@ export class BodyComponent implements OnInit, OnDestroy {
       }
     });
     
-    // Create a subscription for content
+    
     const contentSub = this.connectService.getBodyContent().pipe(
       catchError(error => {
         console.error('Failed to load body content:', error);
-        return of(this.content); // Return default values on error
+        return of(this.content); 
       })
     ).subscribe(res => {
       if (res && Object.keys(res).length > 0) {
-        // Merge default values with API response to ensure all fields are present
+        
         this.content = { ...this.content, ...res };
       }
     });
     
-    // Create a subscription for ratings with proper error handling
     const ratingsSub = this.connectService.getRatings().pipe(
       catchError(error => {
         console.error('Failed to load ratings:', error);
@@ -126,7 +123,7 @@ export class BodyComponent implements OnInit, OnDestroy {
       }
     });
     
-    // Add subscriptions to our tracking array
+ 
     this.subscriptions.push(imagesSub, contentSub, ratingsSub);
   }
   
@@ -138,16 +135,16 @@ export class BodyComponent implements OnInit, OnDestroy {
     const subscription = this.connectService.subscribeUser(this.userId, this.email).pipe(
       catchError(error => {
         console.error('Subscription error:', error);
-        // Show user-friendly error
+      
         alert("Server error during subscription. Please try again later.");
         return of({ success: false, message: "Server error" });
       })
     ).subscribe((res: any) => {
       if (res.success) {
         this.showAlert = true;
-        // Reset the email field
+     
         this.email = '';
-        // Auto-hide the alert after 5 seconds
+    
         setTimeout(() => this.showAlert = false, 5000);
       } else {
         alert(res.message || "Subscription failed. Please try again.");
@@ -158,7 +155,7 @@ export class BodyComponent implements OnInit, OnDestroy {
   }
   
   generateStars(rating: number): string[] {
-    // Ensure rating is a number and in bounds
+ 
     const safeRating = !isNaN(rating) ? Math.min(Math.max(rating, 0), 5) : 0;
     const stars = [];
     for (let i = 0; i < 5; i++) {

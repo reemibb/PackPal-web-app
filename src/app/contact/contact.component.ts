@@ -12,7 +12,7 @@ import { of } from 'rxjs';
   styleUrl: './contact.component.css'
 })
 export class ContactComponent implements OnInit, OnDestroy {
-  // Content
+ 
   content: any = {};
   userId: number = 0; 
   showAlert = false;
@@ -21,10 +21,8 @@ export class ContactComponent implements OnInit, OnDestroy {
   toastType: 'success' | 'danger' = 'success';
   isMobile = false;
   
-  // Map URL - directly sanitized
   mapUrl: SafeResourceUrl;
   
-  // Form data
   formData = {
     name: '',
     email: '',
@@ -32,14 +30,13 @@ export class ContactComponent implements OnInit, OnDestroy {
     message: ''
   };
   
-  // For subscription management
+
   private subscriptions: Subscription[] = [];
 
   constructor(
     private connectService: ConnectService,
     private sanitizer: DomSanitizer
   ) {
-    // Set default map URL
     this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       'https://maps.google.com/maps?q=packpal&t=&z=13&ie=UTF8&iwloc=&output=embed'
     );
@@ -58,7 +55,7 @@ export class ContactComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadContent();
     
-    // Get user ID from localStorage
+    
     const userIdStr = localStorage.getItem('user_id');
     this.userId = userIdStr ? Number(userIdStr) : 0;
     
@@ -68,7 +65,7 @@ export class ContactComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy(): void {
-    // Clean up subscriptions to prevent memory leaks
+    
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
   
@@ -82,7 +79,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.content = res || {};
       console.log('Contact content loaded:', this.content);
       
-      // Update map URL if available
+      
       if (this.content.mapUrl) {
         try {
           this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.content.mapUrl);
@@ -96,7 +93,7 @@ export class ContactComponent implements OnInit, OnDestroy {
   }
 
   submitMessage() {
-    // Basic form validation
+    
     if (!this.formData.name.trim() || !this.formData.email.trim() || 
         !this.formData.subject.trim() || !this.formData.message.trim()) {
       this.toastMessage = '';
@@ -105,7 +102,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Email validation
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.formData.email)) {
       this.toastMessage = 'Please enter a valid email address.';
@@ -114,7 +111,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Start submission process
+ 
     this.isSubmitting = true;
     
     console.log('Submitting message with data:', {
@@ -146,7 +143,7 @@ export class ContactComponent implements OnInit, OnDestroy {
         this.showAlert = true;
         setTimeout(() => this.showAlert = false, 5000);
         
-        // Reset form
+      
         this.formData = {
           name: '',
           email: '',

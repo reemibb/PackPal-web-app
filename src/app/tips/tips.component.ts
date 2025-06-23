@@ -11,13 +11,13 @@ import { of } from 'rxjs';
   styleUrl: './tips.component.css'
 })
 export class TipsComponent implements OnInit, AfterViewInit, OnDestroy {
-  // Default images
+  
   images: any = {};
   
-  // Default content
+  
   content: any = {};
   
-  // Track subscriptions to prevent memory leaks
+  
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -30,12 +30,12 @@ export class TipsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   
   ngAfterViewInit(): void {
-    // Check if we need to scroll to accommodate the fixed header
+    
     this.adjustForHeader();
   }
   
   ngOnDestroy(): void {
-    // Clean up subscriptions
+  
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
   
@@ -69,16 +69,16 @@ export class TipsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(subscription);
   }
   
-  // Handle image loading errors
+  
   handleImageError(event: any, tipNumber: number): void {
     console.warn(`Failed to load tip ${tipNumber} image`);
     event.target.style.display = 'none';
     this.images[`tip${tipNumber}`] = '';
   }
 
-  // Adjust scrolling if needed
+  
   adjustForHeader(): void {
-    // Check if URL has a hash indicating we should scroll
+    
     if (window.location.hash === '#tips-top') {
       setTimeout(() => {
         const element = document.getElementById('tips-top');

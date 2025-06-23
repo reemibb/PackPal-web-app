@@ -11,7 +11,7 @@ import { of } from 'rxjs';
   styleUrl: './footer.component.css'
 })
 export class FooterComponent implements OnInit, OnDestroy {
-  // Default values for content in case API fails
+
   content: any = {
     title: 'Company Name',
     rights: '© 2025 All Rights Reserved'
@@ -27,7 +27,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     phone: '+123 456 789'
   };
 
-  // Track subscriptions to prevent memory leaks
+
   private subscriptions: Subscription[] = [];
 
   constructor(private connectService: ConnectService) {}
@@ -39,7 +39,7 @@ export class FooterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up subscriptions to prevent memory leaks
+   
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
@@ -48,7 +48,7 @@ export class FooterComponent implements OnInit, OnDestroy {
       .pipe(
         catchError(error => {
           console.error('Failed to load main content:', error);
-          return of(this.content); // Return default content on error
+          return of(this.content);
         })
       )
       .subscribe(res => {
@@ -65,7 +65,7 @@ export class FooterComponent implements OnInit, OnDestroy {
       .pipe(
         catchError(error => {
           console.error('Failed to load body content:', error);
-          return of(this.bodycontent); // Return default content on error
+          return of(this.bodycontent); 
         })
       )
       .subscribe(res => {
@@ -82,7 +82,7 @@ export class FooterComponent implements OnInit, OnDestroy {
       .pipe(
         catchError(error => {
           console.error('Failed to load contact content:', error);
-          return of(this.contactcontent); // Return default content on error
+          return of(this.contactcontent);
         })
       )
       .subscribe(res => {
